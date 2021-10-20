@@ -101,6 +101,44 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+  });
+
+  if (!user) {
+    return next(new AppError("Token is invalid or has expired", 400));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+
+  await user.save();
+
+  createSendToken(user, 200, req, res);
+});
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError("Your current password is wrong.", 401));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+
+  await user.save();
+
+  createSendToken(user, 200, req, res);
+});
+
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
   if (
@@ -128,29 +166,5 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = currentUser;
-  res.locals.user = currentUser;
   return next();
 });
-
-exports.isLoggedIn = async (req, res, next) => {
-  if (req.cookies.jwt) {
-    try {
-      const decoded = await promisify(jwt.verify)(
-        req.cookies.jwt,
-        process.env.JWT_SECRET
-      );
-
-      const currentUser = await User.findById(decoded.id);
-      if (!currentUser) {
-        return next();
-      }
-
-      res.locals.user = currentUser;
-      return next();
-    } catch (err) {
-      return next();
-    }
-  }
-
-  next();
-};

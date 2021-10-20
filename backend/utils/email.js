@@ -11,12 +11,11 @@ module.exports = class Email {
   newTransport() {
     if (process.env.NODE_ENV === "production") {
       return nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
+        host: process.env.EMAIL_HOST_PROD,
+        port: process.env.EMAIL_PORT_PROD,
         auth: {
-          user: process.env.GMAIL_USERNAME,
-          pass: process.env.GMAIL_PASSWORD,
+          user: process.env.EMAIL_USERNAME_PROD,
+          pass: process.env.EMAIL_PASSWORD_PROD,
         },
       });
     }
