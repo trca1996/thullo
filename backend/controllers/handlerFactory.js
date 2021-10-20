@@ -48,10 +48,6 @@ exports.createOne = (Model) =>
 
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
-    // const tour = await Tour.findById(req.params.id).populate({
-    //   path: 'guides', // what field, ref we want to populate
-    //   select: '-__v -passwordChangedAt', // what we don't want to show
-    // });
     let query = Model.findById(req.params.id);
     if (popOptions) query = query.populate(popOptions);
 
@@ -71,17 +67,13 @@ exports.getOne = (Model, popOptions) =>
 
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    // To allow for nested GET reviews on tour (hack)
-    let filter = {};
-    if (req.params.tourId) filter = { tour: req.params.tourId };
-
     // EXECUTE QUERY
-    const features = new APIFeatures(Model.find(filter), req.query)
+    const features = new APIFeatures(Model.find(), req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
-    // const doc = await features.query.explain();
+
     const doc = await features.query;
 
     // SEND RESPONSE
