@@ -30,4 +30,16 @@ router.patch(
   boardController.removeMember
 );
 
+router.post(
+  "/:id/createList",
+  boardController.restrictToBoardAdmin,
+  boardController.createList
+);
+
+router.patch(
+  "/:id/removeList",
+  boardController.restrictToBoardAdmin,
+  boardController.removeList
+);
+
 module.exports = router;

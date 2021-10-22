@@ -1,4 +1,6 @@
+const List = require("../models/listModel");
 const User = require("../models/userModel");
+const APIFeatures = require("../utils/apiFeatures");
 const Board = require("./../models/boardModel");
 const AppError = require("./../utils/appError");
 const catchAsync = require("./../utils/catchAsync");
@@ -21,9 +23,58 @@ exports.restrictToBoardAdmin = catchAsync(async (req, res, next) => {
 });
 
 exports.createOne = factory.createOne(Board);
-exports.getAll = factory.getAll(Board);
-exports.getOne = factory.getOne(Board);
+
+exports.getAll = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+
+  // EXECUTE QUERY
+  const features = new APIFeatures(
+    Board.find({
+      $or: [{ admin: userId }, { members: userId }, { private: { $ne: true } }],
+    }),
+    req.query
+  )
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const doc = await features.query;
+
+  // SEND RESPONSE
+  res.status(200).json({
+    status: "success",
+    results: doc.length,
+    data: {
+      data: doc,
+    },
+  });
+});
+
+exports.getOne = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+
+  let query = Board.findOne({
+    _id: req.params.id,
+    $or: [{ admin: userId }, { members: userId }, { private: { $ne: true } }],
+  }).populate("lists");
+
+  const doc = await query;
+
+  if (!doc) {
+    return next(new AppError("No document found with that ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      data: doc,
+    },
+  });
+});
+
 exports.updateOne = factory.updateOne(Board);
+
 // must be modified
 exports.deleteOne = factory.deleteOne(Board);
 
@@ -51,7 +102,7 @@ exports.addMember = catchAsync(async (req, res, next) => {
 
   board.members.push(user._id);
 
-  await board.save();
+  await board.save({ validateBeforeSave: false });
 
   res.status(200).json({
     status: "success",
@@ -67,12 +118,48 @@ exports.removeMember = catchAsync(async (req, res, next) => {
 
   board.members = board.members.filter((member) => member.id !== memberId);
 
-  board.save();
+  board.save({ validateBeforeSave: false });
 
   res.status(200).json({
     status: "success",
     data: {
       data: board,
     },
+  });
+});
+
+exports.createList = catchAsync(async (req, res, next) => {
+  const { title } = req.body;
+  const boardId = req.params.id;
+
+  const board = await Board.findById(boardId);
+  if (!board) {
+    return next(new AppError("There is no board with that id", 404));
+  }
+
+  const newList = await List.create({ title });
+
+  board.lists = board.lists.push(newList._id);
+
+  await board.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      data: newList,
+    },
+  });
+});
+
+exports.removeList = catchAsync(async (req, res, next) => {
+  const { listId } = req.body;
+  const board = await Board.findById(req.params.id);
+
+  board.lists = board.members.filter((list) => list.id !== listId);
+
+  board.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: "success",
   });
 });

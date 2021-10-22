@@ -65,10 +65,10 @@ exports.getOne = (Model, popOptions) =>
     });
   });
 
-exports.getAll = (Model) =>
+exports.getAll = (Model, filterObj = {}) =>
   catchAsync(async (req, res, next) => {
     // EXECUTE QUERY
-    const features = new APIFeatures(Model.find(), req.query)
+    const features = new APIFeatures(Model.find(filterObj), req.query)
       .filter()
       .sort()
       .limitFields()
