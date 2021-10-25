@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 const cardSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, "A list must have a title"],
+    required: [true, "A card must have a title"],
     trim: true,
-    maxlength: [40, "A list title must have less or equal then 40 characters"],
-    minlength: [5, "A list title must have more or equal then 5 characters"],
+    maxlength: [40, "A card title must have less or equal then 40 characters"],
+    minlength: [5, "A card title must have more or equal then 5 characters"],
     unique: true,
   },
   description: {
@@ -51,4 +51,20 @@ const cardSchema = new mongoose.Schema({
       },
     },
   ],
+  labels: [
+    {
+      name: {
+        type: String,
+        required: true,
+      },
+      color: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
+
+const Card = mongoose.model("Card", cardSchema);
+
+module.exports = Card;
