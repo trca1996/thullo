@@ -1,3 +1,4 @@
+const Card = require("../models/cardModel");
 const List = require("../models/listModel");
 const User = require("../models/userModel");
 const APIFeatures = require("../utils/apiFeatures");
@@ -7,7 +8,7 @@ const catchAsync = require("./../utils/catchAsync");
 const factory = require("./handlerFactory");
 
 exports.setUser = (req, res, next) => {
-  req.body.admin = req.user._id;
+  req.body.admin = req.user.id;
   next();
 };
 
@@ -25,7 +26,7 @@ exports.restrictToBoardAdmin = catchAsync(async (req, res, next) => {
 exports.createOne = factory.createOne(Board);
 
 exports.getAll = catchAsync(async (req, res, next) => {
-  const userId = req.user._id;
+  const userId = req.user.id;
 
   // EXECUTE QUERY
   const features = new APIFeatures(
@@ -45,19 +46,21 @@ exports.getAll = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     results: doc.length,
-    data: {
-      data: doc,
-    },
+    data: doc,
   });
 });
 
 exports.getOne = catchAsync(async (req, res, next) => {
-  const userId = req.user._id;
+  const userId = req.user.id;
 
   let query = Board.findOne({
     _id: req.params.id,
     $or: [{ admin: userId }, { members: userId }, { private: { $ne: true } }],
-  }).populate("lists");
+  }).populate({
+    path: "lists",
+    select: "-__v -id",
+    populate: [{ path: "cards", model: "Card", select: "-__v -comments" }],
+  });
 
   const doc = await query;
 
@@ -67,9 +70,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    data: {
-      data: doc,
-    },
+    data: doc,
   });
 });
 
@@ -100,15 +101,13 @@ exports.addMember = catchAsync(async (req, res, next) => {
     return next(new AppError("This member is already in this board", 400));
   }
 
-  board.members.push(user._id);
+  board.members.push(user.id);
 
   await board.save({ validateBeforeSave: false });
 
   res.status(200).json({
     status: "success",
-    data: {
-      data: board,
-    },
+    data: board,
   });
 });
 
@@ -120,11 +119,9 @@ exports.removeMember = catchAsync(async (req, res, next) => {
 
   board.save({ validateBeforeSave: false });
 
-  res.status(200).json({
+  res.status(204).json({
     status: "success",
-    data: {
-      data: board,
-    },
+    data: board,
   });
 });
 
@@ -139,27 +136,32 @@ exports.createList = catchAsync(async (req, res, next) => {
 
   const newList = await List.create({ title });
 
-  board.lists = board.lists.push(newList._id);
+  board.lists = board.lists.push(newList.id);
 
   await board.save({ validateBeforeSave: false });
 
-  res.status(200).json({
+  res.status(201).json({
     status: "success",
-    data: {
-      data: newList,
-    },
+    data: newList,
   });
 });
 
 exports.removeList = catchAsync(async (req, res, next) => {
   const { listId } = req.body;
+
+  const cards = await Card.find({ list: listId });
+
+  if (!cards) {
+    return next(new AppError(`Can't remove list while there is cards in it`));
+  }
+
   const board = await Board.findById(req.params.id);
 
   board.lists = board.members.filter((list) => list.id !== listId);
 
   board.save({ validateBeforeSave: false });
 
-  res.status(200).json({
+  res.status(204).json({
     status: "success",
   });
 });
