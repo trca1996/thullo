@@ -16,9 +16,21 @@ exports.deleteOne = (Model) =>
     });
   });
 
-exports.updateOne = (Model) =>
+exports.updateOne = (Model, filter = []) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+    let newObj = {};
+
+    if (filter.length) {
+      Object.keys(req.body).forEach((key) => {
+        if (filter.includes(key)) {
+          newObj[key] = req.body[key];
+        }
+      });
+    } else {
+      newObj = req.body;
+    }
+
+    const doc = await Model.findByIdAndUpdate(req.params.id, newObj, {
       new: true, // new updated document will be returned
       runValidators: true, // again look schema for validation
     });
@@ -29,9 +41,7 @@ exports.updateOne = (Model) =>
 
     res.status(200).json({
       status: "success",
-      data: {
-        data: doc,
-      },
+      data: doc,
     });
   });
 
@@ -40,9 +50,7 @@ exports.createOne = (Model) =>
     const newDoc = await Model.create(req.body);
     res.status(201).json({
       status: "success",
-      data: {
-        data: newDoc,
-      },
+      data: newDoc,
     });
   });
 
@@ -59,9 +67,7 @@ exports.getOne = (Model, popOptions) =>
 
     res.status(200).json({
       status: "success",
-      data: {
-        data: doc,
-      },
+      data: doc,
     });
   });
 
@@ -80,8 +86,6 @@ exports.getAll = (Model, filterObj = {}) =>
     res.status(200).json({
       status: "success",
       results: doc.length,
-      data: {
-        data: doc,
-      },
+      data: doc,
     });
   });
