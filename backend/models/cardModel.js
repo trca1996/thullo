@@ -27,7 +27,8 @@ const cardSchema = new mongoose.Schema({
   attachments: [
     {
       title: { type: String, required: true },
-      slug: { type: String, required: true },
+      slug: { type: String, required: true, unique: true },
+      mimetype: { type: String, required: true },
       createdAt: {
         type: Date,
         default: Date.now(),

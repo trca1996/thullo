@@ -15,4 +15,10 @@ router
   .delete(cardController.removeCard)
   .patch(cardController.updateCard);
 
+router.post("/:id/addAttachment", cardController.addAttachment);
+router.delete(
+  "/:id/removeAttachment/:atcSlug",
+  cardController.removeAttachment
+);
+
 module.exports = router;
