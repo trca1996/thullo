@@ -188,8 +188,31 @@ exports.editComment = catchAsync(async (req, res, next) => {
 
   card.save();
 
-  res.status(201).json({
+  res.status(200).json({
     status: "success",
     data: commentObj,
+  });
+});
+
+exports.changeList = catchAsync(async (req, res, next) => {
+  const cardId = req.params.id;
+  const { listId } = req.params;
+
+  const card = await Card.findByIdAndUpdate(
+    cardId,
+    { list: listId },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!card) {
+    return next(new AppError("There is no card with that ID"));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: card,
   });
 });

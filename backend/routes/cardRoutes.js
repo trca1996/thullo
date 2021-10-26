@@ -9,7 +9,6 @@ const router = express.Router();
 router.use(authController.protect, cardController.isMember);
 
 router.post("/", cardController.addCard);
-
 router
   .route("/:id")
   .delete(cardController.removeCard)
@@ -23,10 +22,11 @@ router.delete(
 );
 
 router.route("/:id/comment").post(cardController.addComment);
-
 router
   .route("/:id/comment/:commentId")
   .patch(cardController.editComment)
   .delete(cardController.removeComment);
+
+router.patch("/:id/changeList/:listId", cardController.changeList);
 
 module.exports = router;
