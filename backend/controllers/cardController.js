@@ -70,7 +70,7 @@ exports.addAttachment = catchAsync(async (req, res, next) => {
 
   const card = await Card.findById(cardId);
   if (!card) {
-    return next(new AppError("There is no card with this ID"));
+    return next(new AppError("There is no card with this ID", 404));
   }
 
   const isSameName = card.attachments.find((att) => att.slug === fileObj.slug);
@@ -97,7 +97,7 @@ exports.removeAttachment = catchAsync(async (req, res, next) => {
 
   const card = await Card.findById(cardId);
   if (!card) {
-    return next(new AppError("There is no card with this ID"));
+    return next(new AppError("There is no card with this ID", 404));
   }
   console.log(atcSlug);
 
@@ -118,7 +118,7 @@ exports.addComment = catchAsync(async (req, res, next) => {
 
   const card = await Card.findById(cardId);
   if (!card) {
-    return next(new AppError("There is no card with that ID"));
+    return next(new AppError("There is no card with that ID", 404));
   }
 
   card.comments.push({ user: userId, comment });
@@ -141,7 +141,7 @@ exports.removeComment = catchAsync(async (req, res, next) => {
 
   const card = await Card.findById(cardId);
   if (!card) {
-    return next(new AppError("There is no card with that ID"));
+    return next(new AppError("There is no card with that ID", 404));
   }
 
   const indexOfComment = card.comments.findIndex(
@@ -149,13 +149,13 @@ exports.removeComment = catchAsync(async (req, res, next) => {
   );
 
   if (indexOfComment === -1) {
-    return next(new AppError("There is no comment with this ID"));
+    return next(new AppError("There is no comment with this ID", 404));
   }
 
   if (card.comments[indexOfComment].user.toString() === userId) {
     card.comments.splice(indexOfComment, 1);
   } else {
-    return next(new AppError(`You can't delete this comment`));
+    return next(new AppError(`You can't delete this comment`, 400));
   }
 
   card.save();
@@ -173,7 +173,7 @@ exports.editComment = catchAsync(async (req, res, next) => {
 
   const card = await Card.findById(cardId);
   if (!card) {
-    return next(new AppError("There is no card with that ID"));
+    return next(new AppError("There is no card with that ID", 404));
   }
 
   const commentObj = card.comments.find(
@@ -181,7 +181,7 @@ exports.editComment = catchAsync(async (req, res, next) => {
   );
 
   if (!commentObj) {
-    return next(new AppError(`You can't edit this comment`));
+    return next(new AppError(`You can't edit this comment`, 400));
   }
 
   commentObj.comment = newComment;
@@ -208,7 +208,7 @@ exports.changeList = catchAsync(async (req, res, next) => {
   );
 
   if (!card) {
-    return next(new AppError("There is no card with that ID"));
+    return next(new AppError("There is no card with that ID", 404));
   }
 
   res.status(200).json({
