@@ -13,12 +13,20 @@ router.post("/", cardController.addCard);
 router
   .route("/:id")
   .delete(cardController.removeCard)
-  .patch(cardController.updateCard);
+  .patch(cardController.updateCard)
+  .get(cardController.getCard);
 
 router.post("/:id/addAttachment", cardController.addAttachment);
 router.delete(
   "/:id/removeAttachment/:atcSlug",
   cardController.removeAttachment
 );
+
+router.route("/:id/comment").post(cardController.addComment);
+
+router
+  .route("/:id/comment/:commentId")
+  .patch(cardController.editComment)
+  .delete(cardController.removeComment);
 
 module.exports = router;

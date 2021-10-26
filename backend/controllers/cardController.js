@@ -51,6 +51,7 @@ exports.addCard = catchAsync(async (req, res, next) => {
 
 exports.removeCard = factory.deleteOne(Card); // must be modified
 exports.updateCard = factory.updateOne(Card, ["title", "description", "cover"]); // Update only this three
+exports.getCard = factory.getOne(Card);
 
 exports.addAttachment = catchAsync(async (req, res, next) => {
   const file = req.files.attachment;
@@ -107,5 +108,88 @@ exports.removeAttachment = catchAsync(async (req, res, next) => {
 
   res.status(204).json({
     status: "success",
+  });
+});
+
+exports.addComment = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const cardId = req.params.id;
+  const { comment } = req.body;
+
+  const card = await Card.findById(cardId);
+  if (!card) {
+    return next(new AppError("There is no card with that ID"));
+  }
+
+  card.comments.push({ user: userId, comment });
+
+  await card.save();
+
+  res.status(201).json({
+    status: "success",
+    data: {
+      user: userId,
+      comment,
+    },
+  });
+});
+
+exports.removeComment = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const cardId = req.params.id;
+  const { commentId } = req.params;
+
+  const card = await Card.findById(cardId);
+  if (!card) {
+    return next(new AppError("There is no card with that ID"));
+  }
+
+  const indexOfComment = card.comments.findIndex(
+    (comment) => comment.id === commentId
+  );
+
+  if (indexOfComment === -1) {
+    return next(new AppError("There is no comment with this ID"));
+  }
+
+  if (card.comments[indexOfComment].user.toString() === userId) {
+    card.comments.splice(indexOfComment, 1);
+  } else {
+    return next(new AppError(`You can't delete this comment`));
+  }
+
+  card.save();
+
+  res.status(204).json({
+    status: "success",
+  });
+});
+
+exports.editComment = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const cardId = req.params.id;
+  const { commentId } = req.params;
+  const { newComment } = req.body;
+
+  const card = await Card.findById(cardId);
+  if (!card) {
+    return next(new AppError("There is no card with that ID"));
+  }
+
+  const commentObj = card.comments.find(
+    (comment) => comment.user.toString() === userId && comment.id === commentId
+  );
+
+  if (!commentObj) {
+    return next(new AppError(`You can't edit this comment`));
+  }
+
+  commentObj.comment = newComment;
+
+  card.save();
+
+  res.status(201).json({
+    status: "success",
+    data: commentObj,
   });
 });
