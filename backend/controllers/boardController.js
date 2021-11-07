@@ -14,7 +14,9 @@ exports.setUser = (req, res, next) => {
 
 exports.restrictToBoardAdmin = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const board = await Board.findById(req.params.id);
+  const boardId = req.query.boardId ? req.query.boardId : req.params.id;
+
+  const board = await Board.findById(boardId);
 
   if (userId !== board.admin.toString()) {
     return next(new AppError("You are not authorized!"));
@@ -153,7 +155,7 @@ exports.removeList = catchAsync(async (req, res, next) => {
 
   const cards = await Card.find({ list: listId });
 
-  if (!cards) {
+  if (cards) {
     return next(new AppError(`Can't remove list while there is cards in it`));
   }
 

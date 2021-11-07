@@ -27,6 +27,8 @@ exports.isMember = catchAsync(async (req, res, next) => {
     return next(new AppError("You are not admin or member of this board", 401));
   }
 
+  req.board = board;
+
   next();
 });
 
@@ -49,7 +51,7 @@ exports.addCard = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.removeCard = factory.deleteOne(Card); // must be modified
+exports.removeCard = factory.deleteOne(Card);
 exports.updateCard = factory.updateOne(Card, ["title", "description", "cover"]); // Update only this three
 exports.getCard = factory.getOne(Card);
 
@@ -106,8 +108,9 @@ exports.removeAttachment = catchAsync(async (req, res, next) => {
 
   await fs.unlink(attachmentsPath + atcSlug);
 
-  res.status(204).json({
+  res.status(200).json({
     status: "success",
+    data: card,
   });
 });
 
@@ -160,8 +163,9 @@ exports.removeComment = catchAsync(async (req, res, next) => {
 
   card.save();
 
-  res.status(204).json({
+  res.status(200).json({
     status: "success",
+    data: card,
   });
 });
 
@@ -248,9 +252,60 @@ exports.removeLabel = catchAsync(async (req, res, next) => {
 
   card.labels = card.labels.filter((label) => label.id !== labelId);
 
-  card.save();
+  await card.save();
 
-  res.status(204).json({
+  res.status(200).json({
     status: "success",
+    data: card,
+  });
+});
+
+exports.addMember = catchAsync(async (req, res, next) => {
+  const { userId } = req.body;
+  const board = req.board;
+  const cardId = req.params.id;
+
+  const card = await Card.findById(cardId);
+
+  if (!card) {
+    return next(new AppError("There is no card with that ID", 404));
+  }
+
+  const isBoardMember = board.members.some((member) => member.id === userId);
+  if (!isBoardMember) {
+    return next(new AppError("This user is not board member.", 400));
+  }
+
+  const isCardMember = card.members.some((member) => member.id === userId);
+  if (isCardMember) {
+    return next(new AppError("This user is already member of this card", 400));
+  }
+
+  card.members.push(userId);
+
+  await card.save();
+
+  res.status(201).json({
+    status: "success",
+    data: card,
+  });
+});
+
+exports.removeMember = catchAsync(async (req, res, next) => {
+  const { id: cardId, userId } = req.params;
+
+  const card = await Card.findById(cardId);
+
+  if (!card) {
+    return next(new AppError("There is no card with that ID", 404));
+  }
+
+  card.members = card.members.filter((member) => member.id !== userId);
+
+  await card.save();
+
+  res.status(200).json({
+    status: "success",
+    data: card,
   });
 });

@@ -29,4 +29,15 @@ router.patch("/:id/changeList/:listId", cardController.changeList);
 router.post("/:id/label", cardController.addLabel);
 router.delete("/:id/label/:labelId", cardController.removeLabel);
 
+router.post(
+  "/:id/member",
+  boardController.restrictToBoardAdmin,
+  cardController.addMember
+);
+router.delete(
+  "/:id/member/:userId",
+  boardController.restrictToBoardAdmin,
+  cardController.removeMember
+);
+
 module.exports = router;

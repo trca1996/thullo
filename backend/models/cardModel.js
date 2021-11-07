@@ -66,6 +66,15 @@ const cardSchema = new mongoose.Schema({
   ],
 });
 
+cardSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "members",
+    select: "-__v",
+  });
+
+  next();
+});
+
 const Card = mongoose.model("Card", cardSchema);
 
 module.exports = Card;
