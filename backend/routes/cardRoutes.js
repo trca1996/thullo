@@ -15,11 +15,8 @@ router
   .patch(cardController.updateCard)
   .get(cardController.getCard);
 
-router.post("/:id/addAttachment", cardController.addAttachment);
-router.delete(
-  "/:id/removeAttachment/:atcSlug",
-  cardController.removeAttachment
-);
+router.post("/:id/attachment", cardController.addAttachment);
+router.delete("/:id/attachment/:atcSlug", cardController.removeAttachment);
 
 router.route("/:id/comment").post(cardController.addComment);
 router
@@ -28,5 +25,8 @@ router
   .delete(cardController.removeComment);
 
 router.patch("/:id/changeList/:listId", cardController.changeList);
+
+router.post("/:id/label", cardController.addLabel);
+router.delete("/:id/label/:labelId", cardController.removeLabel);
 
 module.exports = router;

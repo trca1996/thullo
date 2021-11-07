@@ -216,3 +216,41 @@ exports.changeList = catchAsync(async (req, res, next) => {
     data: card,
   });
 });
+
+exports.addLabel = catchAsync(async (req, res, next) => {
+  const cardId = req.params.id;
+  const label = req.body;
+
+  const card = await Card.findById(cardId);
+
+  if (!card) {
+    return next(new AppError("There is no card with that ID", 404));
+  }
+
+  card.labels.push(label);
+
+  await card.save();
+
+  res.status(201).json({
+    status: "success",
+    data: card,
+  });
+});
+
+exports.removeLabel = catchAsync(async (req, res, next) => {
+  const { id: cardId, labelId } = req.params;
+
+  const card = await Card.findById(cardId);
+
+  if (!card) {
+    return next(new AppError("There is no card with that ID", 404));
+  }
+
+  card.labels = card.labels.filter((label) => label.id !== labelId);
+
+  card.save();
+
+  res.status(204).json({
+    status: "success",
+  });
+});
