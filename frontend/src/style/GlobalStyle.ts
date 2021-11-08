@@ -1,7 +1,8 @@
 import { createGlobalStyle } from "styled-components";
+import { ThemeType } from "./Theme";
 
-const GlobalStyle = createGlobalStyle`
-     *,
+const GlobalStyle = createGlobalStyle<{ theme: ThemeType }>`
+*,
 *::after,
 *::before {
   margin: 0;
@@ -15,8 +16,8 @@ html {
 body {
   box-sizing: border-box;
   font-weight: 400;
-  /* font-family: 'Poppins', sans-serif; */
-  /* color: whitesmoke */
+  font-family: 'Poppins', sans-serif;
+  color:${({ theme }) => theme.colors.gray1}
 }
 `;
 
