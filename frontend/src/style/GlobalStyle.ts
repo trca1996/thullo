@@ -17,7 +17,8 @@ body {
   box-sizing: border-box;
   font-weight: 400;
   font-family: 'Poppins', sans-serif;
-  color:${({ theme }) => theme.colors.gray1}
+  color:${({ theme }) => theme.colors.gray1};
+  background: ${({ theme }) => theme.colors.white2};
 }
 `;
 
