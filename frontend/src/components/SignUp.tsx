@@ -1,6 +1,8 @@
 import { Dispatch, FormEvent, SetStateAction } from "react";
 import styled from "styled-components";
+import { useAppDispatch } from "../helper/hooks";
 import useForm from "../helper/useForm";
+import { signup } from "../store/actions/authActions";
 import Button from "./Button";
 import Input from "./Input";
 
@@ -9,6 +11,7 @@ interface SignUpProps {
 }
 
 const SignUp = ({ changeForm }: SignUpProps) => {
+  const dispatch = useAppDispatch();
   const {
     state: { name, email, password, passwordConfirm },
     handleChange,
@@ -16,7 +19,7 @@ const SignUp = ({ changeForm }: SignUpProps) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(name, email, password, passwordConfirm);
+    dispatch(signup(name, email, password, passwordConfirm));
   };
 
   return (

@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import styled, { ThemeContext } from "styled-components";
+import { useAppSelector } from "../helper/hooks";
 import Button from "./Button";
 import Input from "./Input";
 import User from "./User";
@@ -9,6 +10,7 @@ interface SignUpProps {
 }
 
 const Header = ({ changeForm }: SignUpProps) => {
+  const { user } = useAppSelector((state) => state.user);
   const { colors } = useContext(ThemeContext);
   const [search, setSearch] = useState("");
 
@@ -43,7 +45,7 @@ const Header = ({ changeForm }: SignUpProps) => {
       )}
 
       {/* IF USER IS LOGGED IN */}
-      {false ? (
+      {user ? (
         <RightGroup>
           <Input
             type="text"
@@ -70,7 +72,7 @@ const Header = ({ changeForm }: SignUpProps) => {
               />
             }
           />
-          <User />
+          <User name={user.name} photo={user.photo} />
         </RightGroup>
       ) : (
         <Auth>

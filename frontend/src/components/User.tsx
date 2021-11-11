@@ -1,21 +1,25 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import styled, { ThemeContext } from "styled-components";
+import { useAppDispatch } from "../helper/hooks";
+import { logout } from "../store/actions/authActions";
 import Button from "./Button";
 import Icon from "./Icon";
 
 interface UserProps {
-  photo?: string;
+  photo: string;
+  name: string;
 }
 
-const User = ({ photo }: UserProps) => {
+const User = ({ photo, name }: UserProps) => {
+  const dispatch = useAppDispatch();
   const { colors } = useContext(ThemeContext);
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <Container onClick={() => setIsExpanded((curr) => !curr)}>
-      <Image src={photo || "/img/users/default.jpg"} alt="user" />
+      <Image src={`/img/users/${photo}`} alt="user" />
 
-      <p>Igor Trnko</p>
+      <p>{name}</p>
 
       <Icon name={isExpanded ? "expand_less" : "expand_more"} />
 
@@ -54,7 +58,7 @@ const User = ({ photo }: UserProps) => {
               color: colors.red,
               fontSize: "1.4rem",
             }}
-            onClick={() => console.log("LOGOUT")}
+            onClick={() => dispatch(logout())}
           />
         </Expand>
       )}
@@ -64,12 +68,14 @@ const User = ({ photo }: UserProps) => {
 
 const Container = styled.div`
   display: flex;
+  justify-content: flex-end;
   align-items: center;
   gap: 1rem;
   font-size: 1.4rem;
   position: relative;
   user-select: none;
   cursor: pointer;
+  min-width: 14rem;
 `;
 
 const Image = styled.img`
