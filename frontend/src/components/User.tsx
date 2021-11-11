@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import styled, { ThemeContext } from "styled-components";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch } from "../helper/hooks";
 import { logout } from "../store/actions/authActions";
 import Button from "./Button";
@@ -11,6 +12,9 @@ interface UserProps {
 }
 
 const User = ({ photo, name }: UserProps) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   const dispatch = useAppDispatch();
   const { colors } = useContext(ThemeContext);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -29,23 +33,23 @@ const User = ({ photo, name }: UserProps) => {
             text="My Profile"
             startIcon="account_circle"
             style={{
-              // change bg color on change page!!!
-              background: colors.gray5,
+              background:
+                pathname === "/profile" ? colors.gray5 : "transparent",
               color: colors.gray1,
               fontSize: "1.4rem",
             }}
-            onClick={() => console.log("Go to user Account Details Page")}
+            onClick={() => navigate("/profile")}
           />
 
           <Button
             text="My Boards"
             startIcon="dashboard"
             style={{
-              background: "transparent",
+              background: pathname === "/" ? colors.gray5 : "transparent",
               color: colors.gray1,
               fontSize: "1.4rem",
             }}
-            onClick={() => console.log("Get only my boards!")}
+            onClick={() => navigate("/")}
           />
 
           <hr style={{ backgroundColor: colors.gray5 }} />

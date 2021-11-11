@@ -18,6 +18,9 @@ export const theme = {
     orange: "#F2994A",
     red: "#EB5757",
     purple: "#9B51E0",
+    info: "#2F80ED",
+    success: "#6FCF97",
+    error: "#EB5757",
   },
 };
 

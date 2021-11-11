@@ -1,20 +1,32 @@
 import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Header from "./components/Header";
 import { checkUser } from "./store/actions/authActions";
 import { useAppDispatch, useAppSelector } from "./helper/hooks";
+import { useAlert } from "react-alert";
+import { RESET_ERROR } from "./store/constants/authConstants";
+import MyProfile from "./pages/MyProfile";
 
 function App() {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.user);
+  const { user, error } = useAppSelector((state) => state.user);
   const [userFormType, setUserFormType] = useState<"SignUp" | "Login">(
     "SignUp"
   );
+  const alert = useAlert();
 
   useEffect(() => {
     dispatch(checkUser());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch({ type: RESET_ERROR });
+    }
+  }, [dispatch, alert, error]);
 
   return (
     <div>
@@ -34,7 +46,12 @@ function App() {
             <Login changeForm={setUserFormType} />
           )}
         </div>
-      ) : null}
+      ) : (
+        <Routes>
+          <Route path="/profile" element={<MyProfile />} />
+          <Route path="*" element={<p>There's nothing here!</p>} />
+        </Routes>
+      )}
     </div>
   );
 }
