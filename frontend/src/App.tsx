@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "./helper/hooks";
 import { useAlert } from "react-alert";
 import { RESET_ERROR } from "./store/constants/authConstants";
 import MyProfile from "./pages/MyProfile";
+import EditProfile from "./pages/EditProfile";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -32,26 +33,27 @@ function App() {
     <div>
       <Header changeForm={setUserFormType} />
 
-      {!user ? (
-        <div
-          style={{
-            paddingTop: "2rem",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          {userFormType === "SignUp" ? (
+      <div
+        style={{
+          paddingTop: "2rem",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {!user ? (
+          userFormType === "SignUp" ? (
             <SignUp changeForm={setUserFormType} />
           ) : (
             <Login changeForm={setUserFormType} />
-          )}
-        </div>
-      ) : (
-        <Routes>
-          <Route path="/profile" element={<MyProfile />} />
-          <Route path="*" element={<p>There's nothing here!</p>} />
-        </Routes>
-      )}
+          )
+        ) : (
+          <Routes>
+            <Route path="/profile" element={<MyProfile />} />
+            <Route path="/profile/edit" element={<EditProfile />} />
+            <Route path="*" element={<p>There's nothing here!</p>} />
+          </Routes>
+        )}
+      </div>
     </div>
   );
 }

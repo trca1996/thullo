@@ -9,6 +9,9 @@ import {
   SIGNUP_REJECT,
   SIGNUP_REQUEST,
   SIGNUP_RESPONSE,
+  UPDATE_PROFILE_REJECT,
+  UPDATE_PROFILE_REQUEST,
+  UPDATE_PROFILE_RESPONSE,
 } from "../constants/authConstants";
 
 export const authReducer = (
@@ -19,15 +22,18 @@ export const authReducer = (
     case SIGNUP_REQUEST:
     case LOGIN_REQUEST:
     case LOGOUT_REQUEST:
+    case UPDATE_PROFILE_REQUEST:
       return { ...state, loading: true };
     case SIGNUP_RESPONSE:
     case LOGIN_RESPONSE:
+    case UPDATE_PROFILE_RESPONSE:
       return { ...state, loading: false, user: action.payload };
     case LOGOUT_RESPONSE:
       return { ...state, loading: false, user: null };
     case SIGNUP_REJECT:
     case LOGIN_REJECT:
     case LOGOUT_REJECT:
+    case UPDATE_PROFILE_REJECT:
       return { ...state, loading: false, error: action.payload };
     case RESET_ERROR:
       return { ...state, error: null };

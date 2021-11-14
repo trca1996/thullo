@@ -11,6 +11,7 @@ interface InputProps {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   Element?: any;
   style?: object;
+  id?: string;
 }
 
 const Input = ({
@@ -22,11 +23,13 @@ const Input = ({
   onChange,
   Element,
   style,
+  id,
 }: InputProps) => {
   return (
     <Container style={{ ...style }}>
       {icon && <Icon name={icon} />}
       <input
+        id={id}
         name={name}
         type={type}
         placeholder={placeholder}

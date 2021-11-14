@@ -10,6 +10,9 @@ import {
   SIGNUP_REJECT,
   SIGNUP_REQUEST,
   SIGNUP_RESPONSE,
+  UPDATE_PROFILE_REJECT,
+  UPDATE_PROFILE_REQUEST,
+  UPDATE_PROFILE_RESPONSE,
 } from "../constants/authConstants";
 
 export const signup =
@@ -64,5 +67,31 @@ export const logout = () => async (dispatch: any) => {
     dispatch({ type: LOGOUT_RESPONSE });
   } catch (err: any) {
     dispatch({ type: LOGOUT_REJECT, payload: err.response.data.message });
+  }
+};
+
+export const updateProfile = (formData: FormData) => async (dispatch: any) => {
+  try {
+    dispatch({ type: UPDATE_PROFILE_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const { data } = await axios.patch(
+      "/api/v1/users/updateMe",
+      formData,
+      config
+    );
+
+    dispatch({ type: UPDATE_PROFILE_RESPONSE, payload: data.data.user });
+  } catch (err: any) {
+    console.log(err.response.data.message);
+    dispatch({
+      type: UPDATE_PROFILE_REJECT,
+      payload: err.response.data.message,
+    });
   }
 };

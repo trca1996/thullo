@@ -10,4 +10,8 @@ export const LOGOUT_REQUEST = "logout_request";
 export const LOGOUT_RESPONSE = "logout_response";
 export const LOGOUT_REJECT = "logout_reject";
 
+export const UPDATE_PROFILE_REQUEST = "update_profile_request";
+export const UPDATE_PROFILE_RESPONSE = "update_profile_response";
+export const UPDATE_PROFILE_REJECT = "update_profile_reject";
+
 export const RESET_ERROR = "reset_error";
