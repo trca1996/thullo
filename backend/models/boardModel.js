@@ -7,12 +7,15 @@ const boardSchema = new mongoose.Schema(
       required: [true, "A board must have a title"],
       trim: true,
       maxlength: [
-        40,
-        "A board title must have less or equal then 40 characters",
+        25,
+        "A board title must have less or equal then 25 characters",
       ],
       minlength: [5, "A board title must have more or equal then 5 characters"],
     },
-    cover: String,
+    cover: {
+      type: String,
+      required: [true, "A board must have a cover image"],
+    },
     description: {
       type: String,
       trim: true,
@@ -52,7 +55,7 @@ const boardSchema = new mongoose.Schema(
 boardSchema.pre(/^find/, function (next) {
   this.populate({
     path: "members",
-    select: "-__v -email -name",
+    select: "-__v -email",
   });
 
   next();

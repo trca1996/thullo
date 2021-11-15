@@ -9,6 +9,7 @@ import { useAlert } from "react-alert";
 import MyProfile from "./pages/MyProfile";
 import EditProfile from "./pages/EditProfile";
 import { errorReset, successReset } from "./store/actions/statusMessageActions";
+import AllBoards from "./pages/AllBoards";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -53,6 +54,7 @@ function App() {
           )
         ) : (
           <Routes>
+            <Route path="/" element={<AllBoards />} />
             <Route path="/profile" element={<MyProfile />} />
             <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="*" element={<p>There's nothing here!</p>} />

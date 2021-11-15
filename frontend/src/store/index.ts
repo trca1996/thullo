@@ -4,6 +4,7 @@ import thunkMiddleware from "redux-thunk";
 import { combineReducers } from "redux";
 import { authReducer } from "./reducers/authReducers";
 import { statusMessageReducer } from "./reducers/statusMessageReducers";
+import { boardsReducer } from "./reducers/boardsReducers";
 
 // INITIAL STATE
 const initState = {
@@ -17,6 +18,7 @@ const initState = {
 // REDUCERS
 const reducers = combineReducers({
   user: authReducer,
+  boards: boardsReducer,
   status: statusMessageReducer,
 });
 

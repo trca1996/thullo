@@ -12,7 +12,7 @@ import {
 } from "../constants/authConstants";
 
 export const authReducer = (
-  state = { user: null, error: null, loading: false },
+  state = { user: null, loading: false },
   action: any
 ) => {
   switch (action.type) {
