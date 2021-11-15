@@ -33,8 +33,9 @@ const User = ({ photo, name }: UserProps) => {
             text="My Profile"
             startIcon="account_circle"
             style={{
-              background:
-                pathname === "/profile" ? colors.gray5 : "transparent",
+              background: pathname.startsWith("/profile")
+                ? colors.gray5
+                : "transparent",
               color: colors.gray1,
               fontSize: "1.4rem",
             }}

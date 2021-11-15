@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled, { ThemeContext } from "styled-components";
 import { useAppSelector } from "../helper/hooks";
 import Button from "./Button";
@@ -10,6 +11,7 @@ interface SignUpProps {
 }
 
 const Header = ({ changeForm }: SignUpProps) => {
+  const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
   const { colors } = useContext(ThemeContext);
   const [search, setSearch] = useState("");
@@ -21,7 +23,12 @@ const Header = ({ changeForm }: SignUpProps) => {
 
   return (
     <Container>
-      <img src="/img/logo.svg" alt="logo" />
+      <img
+        src="/img/logo.svg"
+        alt="logo"
+        onClick={() => navigate("/")}
+        style={{ cursor: "pointer" }}
+      />
 
       {/* IF THERE IS BOARD OPENED SHOW THIS */}
       {false && (

@@ -1,19 +1,24 @@
 import axios from "axios";
 
 import {
-  LOGIN_REJECT,
   LOGIN_REQUEST,
   LOGIN_RESPONSE,
-  LOGOUT_REJECT,
   LOGOUT_REQUEST,
   LOGOUT_RESPONSE,
-  SIGNUP_REJECT,
   SIGNUP_REQUEST,
   SIGNUP_RESPONSE,
-  UPDATE_PROFILE_REJECT,
+  UPDATE_PASSWORD_REQUEST,
+  UPDATE_PASSWORD_RESPONSE,
   UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_RESPONSE,
 } from "../constants/authConstants";
+import { errorMessage, successMessage } from "./statusMessageActions";
+
+interface changePasswordProp {
+  password: string;
+  passwordConfirm: string;
+  passwordCurrent: string;
+}
 
 export const signup =
   (name: string, email: string, password: string, confirmPassword: string) =>
@@ -30,7 +35,7 @@ export const signup =
 
       dispatch({ type: SIGNUP_RESPONSE, payload: response.data.data.user });
     } catch (err: any) {
-      dispatch({ type: SIGNUP_REJECT, payload: err.response.data.message });
+      dispatch(errorMessage(err.response.data.message));
     }
   };
 
@@ -46,7 +51,7 @@ export const login =
 
       dispatch({ type: LOGIN_RESPONSE, payload: response.data.data.user });
     } catch (err: any) {
-      dispatch({ type: LOGIN_REJECT, payload: err.response.data.message });
+      dispatch(errorMessage(err.response.data.message));
     }
   };
 
@@ -66,7 +71,7 @@ export const logout = () => async (dispatch: any) => {
 
     dispatch({ type: LOGOUT_RESPONSE });
   } catch (err: any) {
-    dispatch({ type: LOGOUT_REJECT, payload: err.response.data.message });
+    dispatch(errorMessage(err.response.data.message));
   }
 };
 
@@ -87,11 +92,27 @@ export const updateProfile = (formData: FormData) => async (dispatch: any) => {
     );
 
     dispatch({ type: UPDATE_PROFILE_RESPONSE, payload: data.data.user });
+    dispatch(successMessage("You have update your profile"));
   } catch (err: any) {
-    console.log(err.response.data.message);
-    dispatch({
-      type: UPDATE_PROFILE_REJECT,
-      payload: err.response.data.message,
-    });
+    dispatch(errorMessage(err.response.data.message));
   }
 };
+
+export const changePassword =
+  ({ password, passwordConfirm, passwordCurrent }: changePasswordProp) =>
+  async (dispatch: any) => {
+    try {
+      dispatch({ type: UPDATE_PASSWORD_REQUEST });
+
+      const { data } = await axios.patch("/api/v1/users/updateMyPassword", {
+        password,
+        passwordConfirm,
+        passwordCurrent,
+      });
+
+      dispatch({ type: UPDATE_PASSWORD_RESPONSE, payload: data.data.user });
+      dispatch(successMessage("You have update your password"));
+    } catch (err: any) {
+      dispatch(errorMessage(err.response.data.message));
+    }
+  };

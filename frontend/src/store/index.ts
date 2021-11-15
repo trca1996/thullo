@@ -3,6 +3,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunkMiddleware from "redux-thunk";
 import { combineReducers } from "redux";
 import { authReducer } from "./reducers/authReducers";
+import { statusMessageReducer } from "./reducers/statusMessageReducers";
 
 // INITIAL STATE
 const initState = {
@@ -16,6 +17,7 @@ const initState = {
 // REDUCERS
 const reducers = combineReducers({
   user: authReducer,
+  status: statusMessageReducer,
 });
 
 // CONFIGURE STORE

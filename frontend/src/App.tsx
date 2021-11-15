@@ -6,13 +6,14 @@ import Header from "./components/Header";
 import { checkUser } from "./store/actions/authActions";
 import { useAppDispatch, useAppSelector } from "./helper/hooks";
 import { useAlert } from "react-alert";
-import { RESET_ERROR } from "./store/constants/authConstants";
 import MyProfile from "./pages/MyProfile";
 import EditProfile from "./pages/EditProfile";
+import { errorReset, successReset } from "./store/actions/statusMessageActions";
 
 function App() {
   const dispatch = useAppDispatch();
-  const { user, error } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.user);
+  const { success, error } = useAppSelector((state) => state.status);
   const [userFormType, setUserFormType] = useState<"SignUp" | "Login">(
     "SignUp"
   );
@@ -25,9 +26,13 @@ function App() {
   useEffect(() => {
     if (error) {
       alert.error(error);
-      dispatch({ type: RESET_ERROR });
+      dispatch(errorReset);
     }
-  }, [dispatch, alert, error]);
+    if (success) {
+      alert.success(success);
+      dispatch(successReset);
+    }
+  }, [dispatch, alert, error, success]);
 
   return (
     <div>

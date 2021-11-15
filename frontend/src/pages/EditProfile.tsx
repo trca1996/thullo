@@ -4,7 +4,7 @@ import styled, { ThemeContext } from "styled-components";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
-import { updateProfile } from "../store/actions/authActions";
+import { changePassword, updateProfile } from "../store/actions/authActions";
 
 const EditProfile = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +17,11 @@ const EditProfile = () => {
   const [photo, setPhoto] = useState("");
   const [name, setName] = useState(() => user.name);
   const [email, setEmail] = useState(() => user.email);
+  const [handlePasswordState, setHandlePasswordState] = useState({
+    password: "",
+    passwordCurrent: "",
+    passwordConfirm: "",
+  });
 
   const handleChangePhoto = (e: any) => {
     setPhoto(e.target.files[0]);
@@ -36,6 +41,10 @@ const EditProfile = () => {
     if (photo) formData.set("photo", photo);
 
     dispatch(updateProfile(formData));
+  };
+
+  const handleChangePassword = () => {
+    dispatch(changePassword(handlePasswordState));
   };
 
   return (
@@ -100,8 +109,34 @@ const EditProfile = () => {
 
         <EditPassword>
           <div>
+            <label htmlFor="currentPassword">CURRENT PASSWORD</label>
+            <Input
+              id="currentPassword"
+              type="password"
+              placeholder="Current Password"
+              value={handlePasswordState.passwordCurrent}
+              onChange={(e) =>
+                setHandlePasswordState((current) => ({
+                  ...current,
+                  passwordCurrent: e.target.value,
+                }))
+              }
+            />
+          </div>
+          <div>
             <label htmlFor="password">PASSWORD</label>
-            <Input id="password" type="password" placeholder="Password" />
+            <Input
+              id="password"
+              type="password"
+              placeholder="Password"
+              value={handlePasswordState.password}
+              onChange={(e) =>
+                setHandlePasswordState((current) => ({
+                  ...current,
+                  password: e.target.value,
+                }))
+              }
+            />
           </div>
           <div>
             <label htmlFor="changePassword">CONFIRM PASSWORD</label>
@@ -109,9 +144,16 @@ const EditProfile = () => {
               id="changePassword"
               type="password"
               placeholder="Confirm Password"
+              value={handlePasswordState.passwordConfirm}
+              onChange={(e) =>
+                setHandlePasswordState((current) => ({
+                  ...current,
+                  passwordConfirm: e.target.value,
+                }))
+              }
             />
           </div>
-          <Button text="Change Password" />
+          <Button text="Change Password" onClick={handleChangePassword} />
         </EditPassword>
       </EditContainer>
     </Container>
