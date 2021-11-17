@@ -1,35 +1,54 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import BoardCard from "../components/BoardCard";
 import Button from "../components/Button";
+import Modal from "../components/Modal";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
 import { getAllBoards } from "../store/actions/boardsActions";
 
 const AllBoards = () => {
   const dispatch = useAppDispatch();
   const { boards } = useAppSelector((state) => state.boards);
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   useEffect(() => {
     dispatch(getAllBoards(["title", "cover"]));
   }, [dispatch]);
 
   return (
-    <Container>
-      <Top>
-        <h6>All Boards</h6>
-        <Button text="Add" startIcon="add" />
-      </Top>
-      <BoardsContainer>
-        {boards.map((board: any) => (
-          <BoardCard
-            key={board.id}
-            cover={board.cover}
-            title={board.title}
-            members={board.members}
-          />
-        ))}
-      </BoardsContainer>
-    </Container>
+    <>
+      <Container>
+        <Top>
+          <h6>All Boards</h6>
+          <Button text="Add" startIcon="add" onClick={handleOpenModal} />
+        </Top>
+        <BoardsContainer>
+          {boards.map((board: any) => (
+            <BoardCard
+              key={board.id}
+              cover={board.cover}
+              title={board.title}
+              members={board.members}
+            />
+          ))}
+        </BoardsContainer>
+      </Container>
+
+      <Modal open={openModal} handleClose={handleCloseModal}>
+        <p>This is modals childrens</p>
+        <p>hello</p>
+        <div>hello</div>
+        <p>This type is good!</p>
+      </Modal>
+    </>
   );
 };
 

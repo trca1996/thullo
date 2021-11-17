@@ -19,6 +19,7 @@ body {
   font-family: 'Poppins', sans-serif;
   color:${({ theme }) => theme.colors.gray1};
   background: ${({ theme }) => theme.colors.white2};
+  cursor: default;
 }
 `;
 
