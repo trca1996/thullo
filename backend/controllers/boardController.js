@@ -58,6 +58,7 @@ exports.getAll = catchAsync(async (req, res, next) => {
     }),
     req.query
   )
+    .search()
     .filter()
     .sort()
     .limitFields()

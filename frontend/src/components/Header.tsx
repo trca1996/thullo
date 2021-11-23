@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useAppSelector } from "../helper/hooks";
+import { useAppDispatch, useAppSelector } from "../helper/hooks";
+import { getAllBoards } from "../store/actions/boardsActions";
 import Button from "./Button";
 import Input from "./Input";
 import User from "./User";
@@ -11,13 +12,13 @@ interface SignUpProps {
 }
 
 const Header = ({ changeForm }: SignUpProps) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user);
   const [search, setSearch] = useState("");
 
   const handleSearch = () => {
-    // SEARCH...
-    console.log(search);
+    dispatch(getAllBoards(["title", "cover"], 1, 10, search));
   };
 
   return (

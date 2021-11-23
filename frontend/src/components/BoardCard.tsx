@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import MemberImage from "./MemberImage";
 
@@ -5,6 +6,7 @@ interface BoardCardProps {
   cover?: string;
   title: string;
   members: memberObj[];
+  id: string;
 }
 
 interface memberObj {
@@ -13,7 +15,8 @@ interface memberObj {
   name: string;
 }
 
-const BoardCard = ({ cover, title, members }: BoardCardProps) => {
+const BoardCard = ({ cover, title, members, id }: BoardCardProps) => {
+  const navigate = useNavigate();
   let firstThreeMembers;
   let numOfOthersMembers;
 
@@ -23,7 +26,7 @@ const BoardCard = ({ cover, title, members }: BoardCardProps) => {
   }
 
   return (
-    <Card>
+    <Card onClick={() => navigate(`${id}`)}>
       <Image src={`/img/cover/${cover}`} alt={title} />
 
       <Title>{title}</Title>
@@ -61,6 +64,7 @@ const Card = styled.div`
   flex-direction: column;
   width: 24.3rem;
   height: 24.3rem;
+  cursor: pointer;
 `;
 
 const Image = styled.img`

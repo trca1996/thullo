@@ -7,14 +7,14 @@ import { loaded, loading } from "./loadingActions";
 import { errorMessage, successMessage } from "./statusMessageActions";
 
 export const getAllBoards =
-  (fields: string[], page = 1, limit = 10) =>
+  (fields: string[], page = 1, limit = 10, keyword = "") =>
   async (dispatch: any) => {
     try {
       dispatch(loading);
       const fieldsFormatted = fields.join(",");
 
       const { data } = await axios.get("/api/v1/boards/", {
-        params: { fields: fieldsFormatted, page, limit },
+        params: { fields: fieldsFormatted, page, limit, keyword },
       });
 
       dispatch({ type: ALL_BOARDS_RESPONSE, payload: data.data });

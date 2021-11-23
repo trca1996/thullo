@@ -34,6 +34,7 @@ const AllBoards = () => {
           {boards.map((board: any) => (
             <BoardCard
               key={board.id}
+              id={board.id}
               cover={board.cover}
               title={board.title}
               members={board.members}

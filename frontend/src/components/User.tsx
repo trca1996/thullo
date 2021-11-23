@@ -102,7 +102,7 @@ const Image = styled.img`
 
 const Expand = styled.div`
   position: absolute;
-  bottom: -140px;
+  top: 40px;
   z-index: 100;
   padding: 1rem;
   width: 100%;

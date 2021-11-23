@@ -4,6 +4,21 @@ class APIFeatures {
     this.queryString = queryString;
   }
 
+  // Search
+  search() {
+    const keyword = this.queryString.keyword
+      ? {
+          title: {
+            $regex: this.queryString.keyword,
+            $options: "i",
+          },
+        }
+      : {};
+
+    this.query = this.query.find({ ...keyword });
+    return this;
+  }
+
   filter() {
     // 1) Filtering
     const queryObj = { ...this.queryString };

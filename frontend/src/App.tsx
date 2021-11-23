@@ -11,6 +11,7 @@ import EditProfile from "./pages/EditProfile";
 import { errorReset, successReset } from "./store/actions/statusMessageActions";
 import AllBoards from "./pages/AllBoards";
 import Loading from "./components/Loading";
+import styled from "styled-components";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -39,16 +40,12 @@ function App() {
 
   return (
     <div>
-      <Loading disabled={!loading} />
-      <Header changeForm={setUserFormType} />
+      <HeaderContainer>
+        <Loading disabled={!loading} />
+        <Header changeForm={setUserFormType} />
+      </HeaderContainer>
 
-      <div
-        style={{
-          paddingTop: "2rem",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+      <BodyContainer>
         {!user ? (
           userFormType === "SignUp" ? (
             <SignUp changeForm={setUserFormType} />
@@ -58,14 +55,29 @@ function App() {
         ) : (
           <Routes>
             <Route path="/" element={<AllBoards />} />
+            <Route path="/:id" element={<div>hello from ONE board</div>} />
             <Route path="/profile" element={<MyProfile />} />
             <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="*" element={<p>There's nothing here!</p>} />
           </Routes>
         )}
-      </div>
+      </BodyContainer>
     </div>
   );
 }
+
+const HeaderContainer = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.white1};
+`;
+
+const BodyContainer = styled.div`
+  margin-top: 5.8rem;
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+`;
 
 export default App;
