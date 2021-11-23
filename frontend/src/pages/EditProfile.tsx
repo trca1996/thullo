@@ -10,7 +10,7 @@ const EditProfile = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { colors } = useContext(ThemeContext);
-  const { user } = useAppSelector((store) => store.user);
+  const user = useAppSelector((store) => store.user);
   const [photoPreview, setPhotoPreview] = useState<string | ArrayBuffer | null>(
     ""
   );

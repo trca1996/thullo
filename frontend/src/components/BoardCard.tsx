@@ -14,8 +14,13 @@ interface memberObj {
 }
 
 const BoardCard = ({ cover, title, members }: BoardCardProps) => {
-  const firstThreeMembers = members.slice(0, 3);
-  const numOfOthersMembers = members.slice(3).length;
+  let firstThreeMembers;
+  let numOfOthersMembers;
+
+  if (members.length > 2) {
+    firstThreeMembers = members.slice(0, 3);
+    numOfOthersMembers = members.slice(3).length;
+  }
 
   return (
     <Card>
@@ -25,13 +30,14 @@ const BoardCard = ({ cover, title, members }: BoardCardProps) => {
 
       {members.length !== 0 ? (
         <MembersContainer>
-          {firstThreeMembers.map((member) => (
-            <MemberImage
-              key={member._id}
-              name={member.name}
-              photo={member.photo}
-            />
-          ))}
+          {firstThreeMembers &&
+            firstThreeMembers.map((member) => (
+              <MemberImage
+                key={member._id}
+                name={member.name}
+                photo={member.photo}
+              />
+            ))}
 
           {numOfOthersMembers ? (
             <p>{`+ ${numOfOthersMembers} others`}</p>

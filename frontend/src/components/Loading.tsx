@@ -23,7 +23,7 @@ const Load = styled.div`
   width: 0;
   height: 100%;
   animation-name: ${loading};
-  animation-duration: 1.8s;
+  animation-duration: 1.5s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 `;

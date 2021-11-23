@@ -41,14 +41,11 @@ const boardSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    createdAt: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    timestamps: true,
   }
 );
 

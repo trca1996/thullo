@@ -1,8 +1,7 @@
-import axios from "axios";
 import { useRef, useState } from "react";
-import { useAlert } from "react-alert";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { addBoard } from "../store/actions/boardsActions";
 import Button from "./Button";
 import Input from "./Input";
 import Modal from "./Modal";
@@ -16,8 +15,7 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
   openModal,
   handleCloseModal,
 }) => {
-  const navigate = useNavigate();
-  const alert = useAlert();
+  const dispatch = useDispatch();
   const [cover, setCover] = useState("");
   const [coverPreview, setCoverPreview] = useState<string | ArrayBuffer | null>(
     ""
@@ -27,15 +25,24 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
 
   const InputPhotoRef = useRef<HTMLInputElement>(null);
 
+  const setInitValues = () => {
+    setCover("");
+    setCoverPreview("");
+    setTitle("");
+    setIsPrivate(false);
+  };
+
   const handleChangePhoto = (e: any) => {
-    setCover(e.target.files[0]);
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setCoverPreview(reader.result);
-      }
-    };
-    reader.readAsDataURL(e.target.files[0]);
+    if (e.target.files.length) {
+      setCover(e.target.files[0]);
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setCoverPreview(reader.result);
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 
   const handleAddBoard = async () => {
@@ -44,17 +51,9 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
     formData.set("private", isPrivate.toString());
     if (cover) formData.set("cover", cover);
 
-    // THIS SHOULD GO THROUGH REDUX STORE TO BE UPDATED
-    try {
-      const response = await axios.post("/api/v1/boards", formData);
-
-      if (response.data.status === "success") {
-        alert.success("New board added");
-        navigate("/");
-      }
-    } catch (err: any) {
-      alert.error(err.response.data.message);
-    }
+    dispatch(addBoard(formData));
+    handleCloseModal();
+    setInitValues();
   };
 
   return (
@@ -110,10 +109,7 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
         <CancelButton
           text="Cancel"
           onClick={() => {
-            setCover("");
-            setCoverPreview("");
-            setTitle("");
-            setIsPrivate(false);
+            setInitValues();
             handleCloseModal();
           }}
         />

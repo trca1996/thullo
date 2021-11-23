@@ -1,17 +1,13 @@
 import axios from "axios";
 
 import {
-  LOGIN_REQUEST,
   LOGIN_RESPONSE,
-  LOGOUT_REQUEST,
   LOGOUT_RESPONSE,
-  SIGNUP_REQUEST,
   SIGNUP_RESPONSE,
-  UPDATE_PASSWORD_REQUEST,
   UPDATE_PASSWORD_RESPONSE,
-  UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_RESPONSE,
 } from "../constants/authConstants";
+import { loaded, loading } from "./loadingActions";
 import { errorMessage, successMessage } from "./statusMessageActions";
 
 interface changePasswordProp {
@@ -24,7 +20,7 @@ export const signup =
   (name: string, email: string, password: string, confirmPassword: string) =>
   async (dispatch: any) => {
     try {
-      dispatch({ type: SIGNUP_REQUEST });
+      dispatch(loading);
 
       const response = await axios.post("/api/v1/users/signup", {
         name,
@@ -37,12 +33,13 @@ export const signup =
     } catch (err: any) {
       dispatch(errorMessage(err.response.data.message));
     }
+    dispatch(loaded);
   };
 
 export const login =
   (email: string, password: string) => async (dispatch: any) => {
     try {
-      dispatch({ type: LOGIN_REQUEST });
+      dispatch(loading);
 
       const response = await axios.post("/api/v1/users/login", {
         email,
@@ -53,19 +50,22 @@ export const login =
     } catch (err: any) {
       dispatch(errorMessage(err.response.data.message));
     }
+    dispatch(loaded);
   };
 
 export const checkUser = () => async (dispatch: any) => {
   try {
+    dispatch(loading);
     const response = await axios.get("/api/v1/users/me");
 
     dispatch({ type: LOGIN_RESPONSE, payload: response.data.data });
   } catch (err: any) {}
+  dispatch(loaded);
 };
 
 export const logout = () => async (dispatch: any) => {
   try {
-    dispatch({ type: LOGOUT_REQUEST });
+    dispatch(loading);
 
     await axios.get("/api/v1/users/logout");
 
@@ -73,36 +73,28 @@ export const logout = () => async (dispatch: any) => {
   } catch (err: any) {
     dispatch(errorMessage(err.response.data.message));
   }
+  dispatch(loaded);
 };
 
 export const updateProfile = (formData: FormData) => async (dispatch: any) => {
   try {
-    dispatch({ type: UPDATE_PROFILE_REQUEST });
+    dispatch(loading);
 
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
-
-    const { data } = await axios.patch(
-      "/api/v1/users/updateMe",
-      formData,
-      config
-    );
+    const { data } = await axios.patch("/api/v1/users/updateMe", formData);
 
     dispatch({ type: UPDATE_PROFILE_RESPONSE, payload: data.data.user });
     dispatch(successMessage("You have update your profile"));
   } catch (err: any) {
     dispatch(errorMessage(err.response.data.message));
   }
+  dispatch(loaded);
 };
 
 export const changePassword =
   ({ password, passwordConfirm, passwordCurrent }: changePasswordProp) =>
   async (dispatch: any) => {
     try {
-      dispatch({ type: UPDATE_PASSWORD_REQUEST });
+      dispatch(loading);
 
       const { data } = await axios.patch("/api/v1/users/updateMyPassword", {
         password,
@@ -115,4 +107,5 @@ export const changePassword =
     } catch (err: any) {
       dispatch(errorMessage(err.response.data.message));
     }
+    dispatch(loaded);
   };

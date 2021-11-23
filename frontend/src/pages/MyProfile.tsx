@@ -5,7 +5,7 @@ import { useAppSelector } from "../helper/hooks";
 
 const MyProfile = () => {
   const navigate = useNavigate();
-  const { user } = useAppSelector((store) => store.user);
+  const user = useAppSelector((store) => store.user);
 
   return (
     <Container>

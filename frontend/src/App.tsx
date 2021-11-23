@@ -10,11 +10,13 @@ import MyProfile from "./pages/MyProfile";
 import EditProfile from "./pages/EditProfile";
 import { errorReset, successReset } from "./store/actions/statusMessageActions";
 import AllBoards from "./pages/AllBoards";
+import Loading from "./components/Loading";
 
 function App() {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user);
   const { success, error } = useAppSelector((state) => state.status);
+  const loading = useAppSelector((state) => state.loading);
   const [userFormType, setUserFormType] = useState<"SignUp" | "Login">(
     "SignUp"
   );
@@ -37,6 +39,7 @@ function App() {
 
   return (
     <div>
+      <Loading disabled={!loading} />
       <Header changeForm={setUserFormType} />
 
       <div

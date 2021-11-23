@@ -12,7 +12,7 @@ interface SignUpProps {
 
 const Header = ({ changeForm }: SignUpProps) => {
   const navigate = useNavigate();
-  const { user } = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user);
   const [search, setSearch] = useState("");
 
   const handleSearch = () => {

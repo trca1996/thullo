@@ -1,17 +1,14 @@
 import {
-  ALL_BOARDS_REQUEST,
+  ADD_BOARD_RESPONSE,
   ALL_BOARDS_RESPONSE,
 } from "../constants/boardsConstants";
 
-export const boardsReducer = (
-  state = { boards: [], loading: false },
-  action: any
-) => {
+export const boardsReducer = (state = [], action: any) => {
   switch (action.type) {
-    case ALL_BOARDS_REQUEST:
-      return { ...state, loading: true };
     case ALL_BOARDS_RESPONSE:
-      return { loading: false, boards: action.payload };
+      return action.payload;
+    case ADD_BOARD_RESPONSE:
+      return [action.payload, ...state];
     default:
       return state;
   }

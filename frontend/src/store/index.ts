@@ -5,14 +5,17 @@ import { combineReducers } from "redux";
 import { authReducer } from "./reducers/authReducers";
 import { statusMessageReducer } from "./reducers/statusMessageReducers";
 import { boardsReducer } from "./reducers/boardsReducers";
+import { loadingReducer } from "./reducers/loadingReducer";
 
 // INITIAL STATE
 const initState = {
-  user: {
-    user: null,
-    error: null,
-    loading: false,
+  user: null,
+  boards: [],
+  status: {
+    success: "",
+    error: "",
   },
+  loading: false,
 };
 
 // REDUCERS
@@ -20,6 +23,7 @@ const reducers = combineReducers({
   user: authReducer,
   boards: boardsReducer,
   status: statusMessageReducer,
+  loading: loadingReducer,
 });
 
 // CONFIGURE STORE

@@ -8,7 +8,7 @@ import { getAllBoards } from "../store/actions/boardsActions";
 
 const AllBoards = () => {
   const dispatch = useAppDispatch();
-  const { boards } = useAppSelector((state) => state.boards);
+  const boards = useAppSelector((state) => state.boards);
   const [openModal, setOpenModal] = useState(false);
 
   const handleOpenModal = () => {
