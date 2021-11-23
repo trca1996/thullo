@@ -3,6 +3,7 @@ interface IconProps {
 }
 
 const Icon = ({ name }: IconProps) => {
+  // TEST TEST TESTS
   return (
     <span style={{ fontSize: "inherit" }} className="material-icons">
       {name}
