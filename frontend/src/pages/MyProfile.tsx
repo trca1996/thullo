@@ -1,12 +1,10 @@
-import { useContext } from "react";
-import styled, { ThemeContext } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { useAppSelector } from "../helper/hooks";
 
 const MyProfile = () => {
   const navigate = useNavigate();
-  const { colors } = useContext(ThemeContext);
   const { user } = useAppSelector((store) => store.user);
 
   return (
@@ -17,16 +15,7 @@ const MyProfile = () => {
         <Section>
           <h6>Profile</h6>
 
-          <Button
-            text="Edit"
-            style={{
-              backgroundColor: "transparent",
-              color: colors.black,
-              border: `1px solid ${colors.gray4}`,
-              padding: ".5rem 2rem",
-            }}
-            onClick={() => navigate("edit")}
-          />
+          <EditButton text="Edit" onClick={() => navigate("edit")} />
         </Section>
 
         <hr />
@@ -103,6 +92,13 @@ const Section = styled.div`
     height: 4rem;
     border-radius: 0.8rem;
   }
+`;
+
+const EditButton = styled(Button)`
+  background-color: transparent;
+  color: ${({ theme }) => theme.colors.black};
+  border: 1px solid ${({ theme }) => theme.colors.gray4};
+  padding: 0.5rem 2rem;
 `;
 
 const MiniSection = styled(Section)`

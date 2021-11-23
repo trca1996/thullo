@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
 
-const Loading = ({ disabled }: { disabled: boolean }) => {
+const Loading = ({ disabled }: { disabled?: boolean }) => {
   return <LoadContainer>{!disabled && <Load />}</LoadContainer>;
 };
 

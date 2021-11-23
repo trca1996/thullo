@@ -37,8 +37,6 @@ exports.addCard = catchAsync(async (req, res, next) => {
 
   const list = await List.findById(listId);
 
-  console.log(req.query);
-
   if (!list) {
     return next(new AppError("There is no list with this ID", 404));
   }

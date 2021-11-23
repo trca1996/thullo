@@ -7,7 +7,6 @@ const cardSchema = new mongoose.Schema({
     trim: true,
     maxlength: [40, "A card title must have less or equal then 40 characters"],
     minlength: [5, "A card title must have more or equal then 5 characters"],
-    unique: true,
   },
   description: {
     type: String,
@@ -26,9 +25,9 @@ const cardSchema = new mongoose.Schema({
   ],
   attachments: [
     {
-      title: { type: String, required: true },
-      slug: { type: String, required: true, unique: true },
-      mimetype: { type: String, required: true },
+      title: { type: String },
+      slug: { type: String },
+      mimetype: { type: String },
       createdAt: {
         type: Date,
         default: Date.now(),

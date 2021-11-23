@@ -35,8 +35,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     }
   }
 
-  // console.log(req.body);
-
   const user = await User.findById(req.user.id);
   const prevPhoto = user.photo;
 

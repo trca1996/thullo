@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
 import styled from "styled-components";
 import Icon from "./Icon";
 
@@ -12,6 +12,7 @@ interface InputProps {
   Element?: any;
   style?: object;
   id?: string;
+  className?: string;
 }
 
 const Input = ({
@@ -24,9 +25,10 @@ const Input = ({
   Element,
   style,
   id,
+  className,
 }: InputProps) => {
   return (
-    <Container style={{ ...style }}>
+    <Container style={{ ...style }} className={className}>
       {icon && <Icon name={icon} />}
       <input
         id={id}

@@ -6,6 +6,8 @@ const Board = require("./../models/boardModel");
 const AppError = require("./../utils/appError");
 const catchAsync = require("./../utils/catchAsync");
 const factory = require("./handlerFactory");
+const path = require("path");
+const fs = require("fs/promises");
 
 exports.setUser = (req, res, next) => {
   req.body.admin = req.user.id;
@@ -25,7 +27,26 @@ exports.restrictToBoardAdmin = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.createOne = factory.createOne(Board);
+const boardCoverPath = path.join(__dirname, "../public/img/cover/");
+
+exports.createOne = catchAsync(async (req, res, next) => {
+  let cover = "defaultCover.jpg";
+  if (req.files) {
+    if (req.files.cover.mimetype.split("/")[0] !== "image") {
+      return next(new AppError("You can only upload one image file", 400));
+    }
+
+    cover = `board-${req.user.id}-${Date.now()}.jpeg`;
+    req.files.cover.mv(boardCoverPath + cover);
+  }
+
+  const board = await Board.create({ ...req.body, cover });
+
+  res.status(201).json({
+    status: "success",
+    data: board,
+  });
+});
 
 exports.getAll = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
@@ -44,7 +65,6 @@ exports.getAll = catchAsync(async (req, res, next) => {
 
   const doc = await features.query;
 
-  // SEND RESPONSE
   res.status(200).json({
     status: "success",
     results: doc.length,
@@ -80,8 +100,28 @@ exports.getOne = catchAsync(async (req, res, next) => {
 
 exports.updateOne = factory.updateOne(Board);
 
-// must be modified
-exports.deleteOne = factory.deleteOne(Board);
+exports.deleteOne = catchAsync(async (req, res, next) => {
+  const board = await Board.findById(req.params.id);
+  if (!board) {
+    return next(new AppError("No document found with that ID", 404));
+  }
+
+  if (board.cover.startsWith("board")) {
+    await fs.unlink(boardCoverPath + board.cover);
+  }
+
+  board.lists.forEach(async (list) => {
+    await Card.deleteMany({ list: list });
+    await List.findByIdAndDelete(list);
+  });
+
+  board.remove();
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
 
 exports.addMember = catchAsync(async (req, res, next) => {
   const { memberEmail } = req.body;

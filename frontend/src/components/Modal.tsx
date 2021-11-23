@@ -12,7 +12,7 @@ const Modal = ({ children, open, handleClose }: ModalProps) => {
     <>
       {open && (
         <Shadow onClick={handleClose}>
-          <Container>{children}</Container>
+          <Container onClick={(e) => e.stopPropagation()}>{children}</Container>
         </Shadow>
       )}
     </>
@@ -31,7 +31,7 @@ const Shadow = styled.div`
   position: absolute;
   top: 0;
   z-index: 500;
-  width: 100%;
+  width: 100%; // FIX
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   user-select: none;

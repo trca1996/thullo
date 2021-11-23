@@ -11,6 +11,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
 const boardRouter = require("./routes/boardRoutes");
 const cardRouter = require("./routes/cardRoutes");
+const utilRouter = require("./routes/utilRouter");
 
 const app = express();
 
@@ -44,6 +45,7 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/boards", boardRouter);
 app.use("/api/v1/cards", cardRouter);
+app.use("/api/v1/utils", utilRouter);
 
 // ERROR
 app.all("*", (req, res, next) => {

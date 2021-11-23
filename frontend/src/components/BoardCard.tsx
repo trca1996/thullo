@@ -19,7 +19,7 @@ const BoardCard = ({ cover, title, members }: BoardCardProps) => {
 
   return (
     <Card>
-      <Image src={cover} alt={title} />
+      <Image src={`/img/cover/${cover}`} alt={title} />
 
       <Title>{title}</Title>
 

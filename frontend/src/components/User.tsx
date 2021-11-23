@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled, { ThemeContext } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch } from "../helper/hooks";
@@ -18,6 +18,17 @@ const User = ({ photo, name }: UserProps) => {
   const dispatch = useAppDispatch();
   const { colors } = useContext(ThemeContext);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  useEffect(() => {
+    const closeExtend = () => {
+      if (isExpanded) setIsExpanded(false);
+    };
+
+    window.addEventListener("click", closeExtend);
+    return () => {
+      window.removeEventListener("click", closeExtend);
+    };
+  });
 
   return (
     <Container onClick={() => setIsExpanded((curr) => !curr)}>

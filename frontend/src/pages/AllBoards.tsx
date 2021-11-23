@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import AddBoardModal from "../components/AddBoardModal";
 import BoardCard from "../components/BoardCard";
 import Button from "../components/Button";
-import Modal from "../components/Modal";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
 import { getAllBoards } from "../store/actions/boardsActions";
 
@@ -41,13 +41,10 @@ const AllBoards = () => {
           ))}
         </BoardsContainer>
       </Container>
-
-      <Modal open={openModal} handleClose={handleCloseModal}>
-        <p>This is modals childrens</p>
-        <p>hello</p>
-        <div>hello</div>
-        <p>This type is good!</p>
-      </Modal>
+      <AddBoardModal
+        openModal={openModal}
+        handleCloseModal={handleCloseModal}
+      />
     </>
   );
 };

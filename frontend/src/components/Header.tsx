@@ -1,6 +1,6 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { ThemeContext } from "styled-components";
+import styled from "styled-components";
 import { useAppSelector } from "../helper/hooks";
 import Button from "./Button";
 import Input from "./Input";
@@ -13,7 +13,6 @@ interface SignUpProps {
 const Header = ({ changeForm }: SignUpProps) => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
-  const { colors } = useContext(ThemeContext);
   const [search, setSearch] = useState("");
 
   const handleSearch = () => {
@@ -37,47 +36,19 @@ const Header = ({ changeForm }: SignUpProps) => {
             <BoardName>Board name</BoardName>
           </div>
           <Line></Line>
-          <Button
-            text="All board"
-            startIcon="apps"
-            style={{
-              background: colors.white3,
-              color: colors.gray3,
-              height: "3.2rem",
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-            }}
-          />
+          <StyledButton text="All board" startIcon="apps" />
         </BoardGroup>
       )}
 
       {/* IF USER IS LOGGED IN */}
       {user ? (
         <RightGroup>
-          <Input
+          <SearchInput
             type="text"
             placeholder="Keyword..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{
-              padding: "2px 2px 2px 1.3rem",
-              border: "none",
-              boxShadow: "1px 5px 15px 3px rgba(0, 0, 0, 0.05)",
-              height: "3.4rem",
-              width: "33.8rem",
-            }}
-            Element={
-              <Button
-                text="Search"
-                style={{
-                  alignSelf: "stretch",
-                  width: "7.4rem",
-                  fontWeight: 500,
-                  fontSize: "1rem",
-                }}
-                onClick={handleSearch}
-              />
-            }
+            Element={<SearchButton text="Search" onClick={handleSearch} />}
           />
           <User name={user.name} photo={user.photo} />
         </RightGroup>
@@ -111,6 +82,14 @@ const BoardName = styled.h3`
   font-size: 1.8rem;
 `;
 
+const StyledButton = styled(Button)`
+  background: ${({ theme }) => theme.colors.white3};
+  color: ${({ theme }) => theme.colors.gray3};
+  height: 3.2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+`;
+
 const Line = styled.div`
   width: 2px;
   background: ${({ theme }) => theme.colors.gray5};
@@ -121,6 +100,21 @@ const RightGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 2rem;
+`;
+
+const SearchInput = styled(Input)`
+  padding: 2px 2px 2px 1.3rem;
+  border: none;
+  box-shadow: 1px 5px 15px 3px rgba(0, 0, 0, 0.05);
+  height: 3.4rem;
+  width: 33.8rem;
+`;
+
+const SearchButton = styled(Button)`
+  align-self: stretch;
+  width: 7.4rem;
+  font-weight: 500;
+  font-size: 1rem;
 `;
 
 const Auth = styled.div`
