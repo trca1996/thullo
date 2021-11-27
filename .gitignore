@@ -29,3 +29,5 @@ yarn-debug.log*
 yarn-error.log*
 
 backend/public/img/users/*
+backend/public/img/cover/*
+backend/public/attachments/*
