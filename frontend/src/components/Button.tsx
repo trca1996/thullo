@@ -23,10 +23,12 @@ const Button = ({
   type,
   onClick,
   className,
+  backgroundColor,
+  color,
 }: ButtonProps) => {
   return (
     <StyledButton
-      style={{ ...style }}
+      style={{ backgroundColor, color, ...style }}
       className={className}
       type={type}
       onClick={onClick}

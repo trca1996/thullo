@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAppDispatch } from "../helper/hooks";
+import { getBoard } from "../store/actions/boardsActions";
 import MemberImage from "./MemberImage";
 
 interface BoardCardProps {
@@ -17,6 +19,7 @@ interface memberObj {
 
 const BoardCard = ({ cover, title, members, id }: BoardCardProps) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   let firstThreeMembers;
   let numOfOthersMembers;
 
@@ -26,7 +29,12 @@ const BoardCard = ({ cover, title, members, id }: BoardCardProps) => {
   }
 
   return (
-    <Card onClick={() => navigate(`${id}`)}>
+    <Card
+      onClick={() => {
+        dispatch(getBoard(id));
+        navigate(`${id}`);
+      }}
+    >
       <Image src={`/img/cover/${cover}`} alt={title} />
 
       <Title>{title}</Title>

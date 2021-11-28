@@ -1,4 +1,5 @@
-import { Dispatch, FormEvent, SetStateAction } from "react";
+import { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAppDispatch } from "../helper/hooks";
 import useForm from "../helper/useForm";
@@ -6,12 +7,9 @@ import { signup } from "../store/actions/authActions";
 import Button from "./Button";
 import Input from "./Input";
 
-interface SignUpProps {
-  changeForm: Dispatch<SetStateAction<"SignUp" | "Login">>;
-}
-
-const SignUp = ({ changeForm }: SignUpProps) => {
+const SignUp = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     state: { name, email, password, passwordConfirm },
     handleChange,
@@ -77,7 +75,7 @@ const SignUp = ({ changeForm }: SignUpProps) => {
       </form>
 
       <Paragraph>
-        Already a member? <span onClick={() => changeForm("Login")}>Login</span>
+        Already a member? <span onClick={() => navigate("/login")}>Login</span>
       </Paragraph>
     </Container>
   );

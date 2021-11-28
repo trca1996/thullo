@@ -3,15 +3,24 @@ import styled from "styled-components";
 interface MemberImageProps {
   name: string;
   photo: string;
+  style?: object;
+  className?: string;
 }
 
-const MemberImage = ({ name, photo }: MemberImageProps) => {
+const MemberImage = ({ name, photo, className, style }: MemberImageProps) => {
   if (photo !== "default.jpg") {
-    return <Image src={`/img/users/${photo}`} alt="user" />;
+    return (
+      <Image
+        className={className}
+        style={{ ...style }}
+        src={`/img/users/${photo}`}
+        alt="user"
+      />
+    );
   }
 
   return (
-    <NameImage>
+    <NameImage className={className} style={{ ...style }}>
       {name
         .split(" ")
         .map((subName) => subName[0])

@@ -1,4 +1,5 @@
-import { Dispatch, FormEvent, SetStateAction } from "react";
+import { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAppDispatch } from "../helper/hooks";
 import useForm from "../helper/useForm";
@@ -6,11 +7,8 @@ import { login } from "../store/actions/authActions";
 import Button from "./Button";
 import Input from "./Input";
 
-interface LoginProps {
-  changeForm: Dispatch<SetStateAction<"SignUp" | "Login">>;
-}
-
-const UserForm = ({ changeForm }: LoginProps) => {
+const UserForm = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {
     state: { email, password },
@@ -56,7 +54,7 @@ const UserForm = ({ changeForm }: LoginProps) => {
 
       <Paragraph>
         Don't have an account yer?{" "}
-        <span onClick={() => changeForm("SignUp")}>Sign Up</span>
+        <span onClick={() => navigate("/signUp")}>Sign Up</span>
       </Paragraph>
     </Container>
   );

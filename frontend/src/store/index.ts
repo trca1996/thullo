@@ -4,13 +4,14 @@ import thunkMiddleware from "redux-thunk";
 import { combineReducers } from "redux";
 import { authReducer } from "./reducers/authReducers";
 import { statusMessageReducer } from "./reducers/statusMessageReducers";
-import { boardsReducer } from "./reducers/boardsReducers";
+import { boardReducer, boardsReducer } from "./reducers/boardsReducers";
 import { loadingReducer } from "./reducers/loadingReducer";
 
 // INITIAL STATE
 const initState = {
   user: null,
   boards: [],
+  currentBoard: null,
   status: {
     success: "",
     error: "",
@@ -22,6 +23,7 @@ const initState = {
 const reducers = combineReducers({
   user: authReducer,
   boards: boardsReducer,
+  currentBoard: boardReducer,
   status: statusMessageReducer,
   loading: loadingReducer,
 });

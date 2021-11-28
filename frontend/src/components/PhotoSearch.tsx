@@ -3,6 +3,7 @@ import styled from "styled-components";
 import getPhotos, { Photo } from "../helper/getPhotos";
 import Button from "./Button";
 import Input from "./Input";
+import MenuContainer from "./MenuContainer";
 
 const PhotoSearch = () => {
   const [keyword, setKeyword] = useState("");
@@ -18,7 +19,7 @@ const PhotoSearch = () => {
   };
 
   return (
-    <Container>
+    <MenuContainer>
       <Title>Photo Search</Title>
       <SubTitle>Search Unsplash for photos</SubTitle>
 
@@ -42,21 +43,9 @@ const PhotoSearch = () => {
           <Image key={photo.id} src={photo.photoUrl} alt="cover" />
         ))}
       </PicturesContainer>
-    </Container>
+    </MenuContainer>
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.colors.white1};
-  border-radius: 0.8rem;
-  border: 1px solid ${({ theme }) => theme.colors.gray5};
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-  padding: 1rem;
-  position: absolute;
-  top: 4rem;
-`;
 
 const Title = styled.p`
   font-weight: 600;

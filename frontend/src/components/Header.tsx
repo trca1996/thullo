@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
@@ -7,14 +7,11 @@ import Button from "./Button";
 import Input from "./Input";
 import User from "./User";
 
-interface SignUpProps {
-  changeForm: Dispatch<SetStateAction<"SignUp" | "Login">>;
-}
-
-const Header = ({ changeForm }: SignUpProps) => {
+const Header = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user);
+  const board = useAppSelector((state) => state.currentBoard);
   const [search, setSearch] = useState("");
 
   const handleSearch = () => {
@@ -30,18 +27,20 @@ const Header = ({ changeForm }: SignUpProps) => {
         style={{ cursor: "pointer" }}
       />
 
-      {/* IF THERE IS BOARD OPENED SHOW THIS */}
-      {false && (
+      {board && (
         <BoardGroup>
           <div>
-            <BoardName>Board name</BoardName>
+            <BoardName>{board.title}</BoardName>
           </div>
           <Line></Line>
-          <StyledButton text="All board" startIcon="apps" />
+          <StyledButton
+            text="All board"
+            startIcon="apps"
+            onClick={() => navigate("/")}
+          />
         </BoardGroup>
       )}
 
-      {/* IF USER IS LOGGED IN */}
       {user ? (
         <RightGroup>
           <SearchInput
@@ -55,8 +54,8 @@ const Header = ({ changeForm }: SignUpProps) => {
         </RightGroup>
       ) : (
         <Auth>
-          <p onClick={() => changeForm("Login")}>Login</p>
-          <p onClick={() => changeForm("SignUp")}>Sign Up</p>
+          <p onClick={() => navigate("/login")}>Login</p>
+          <p onClick={() => navigate("/signUp")}>Sign Up</p>
         </Auth>
       )}
     </Container>
