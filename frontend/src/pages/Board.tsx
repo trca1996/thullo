@@ -55,6 +55,12 @@ const Board: React.FC = () => {
         {board?.lists.map((list: ListPros) => (
           <List key={list.id} data={list} />
         ))}
+
+        <StyledButton
+          text={board?.lists.length ? "Add another list" : "Add list"}
+          endIcon="add"
+          textStyle={{ flex: "none" }}
+        />
       </MainContainer>
     </Container>
   );
@@ -87,6 +93,14 @@ const MainContainer = styled.div`
   padding: 2.8rem 2.4rem;
   display: flex;
   gap: 2rem;
+`;
+
+const StyledButton = styled(Button)`
+  width: 241px;
+  height: 32px;
+  background: ${({ theme }) => theme.colors.blue2};
+  color: ${({ theme }) => theme.colors.blue1};
+  border-radius: 8px;
 `;
 
 export default Board;

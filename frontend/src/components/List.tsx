@@ -1,17 +1,32 @@
 import styled from "styled-components";
 import { ListPros } from "../pages/Board";
 import Button from "./Button";
+import Card from "./Card";
 import Icon from "./Icon";
 
-const List: React.FC<{ data: ListPros }> = ({ data }) => {
-  console.log(data);
+export interface CardProps {
+  _id: string;
+  title: string;
+  description: string;
+  cover: string;
+  list: [];
+  members: [];
+  attachments: [];
+  comments: [];
+  labels: [];
+}
 
+const List: React.FC<{ data: ListPros }> = ({ data }) => {
   return (
     <Container>
       <Head>
         <p>{data.title}</p>
         <Icon name="more_horiz" style={{ cursor: "pointer" }} />
       </Head>
+
+      {data.cards.map((card: CardProps) => (
+        <Card key={card._id} data={card} />
+      ))}
 
       <StyledButton
         text={data.cards.length ? "Add another card" : "Add card"}
