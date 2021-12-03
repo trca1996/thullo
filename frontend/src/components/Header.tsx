@@ -54,6 +54,7 @@ const Header = () => {
         </RightGroup>
       ) : (
         <Auth>
+          {/* TODO: Make this NavLink!!!*/}
           <p onClick={() => navigate("/login")}>Login</p>
           <p onClick={() => navigate("/signUp")}>Sign Up</p>
         </Auth>

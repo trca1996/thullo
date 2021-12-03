@@ -16,6 +16,8 @@ export interface CardProps {
   labels: [];
 }
 
+// TODO: Implement Drag and Drop on Cards. Use: React DnD or React Beautiful DnD
+
 const List: React.FC<{ data: ListPros }> = ({ data }) => {
   return (
     <Container>

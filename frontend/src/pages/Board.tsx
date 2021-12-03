@@ -1,9 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useParams } from "react-router";
 import styled, { ThemeContext } from "styled-components";
 import Button from "../components/Button";
 import List from "../components/List";
 import MemberImage from "../components/MemberImage";
-import { useAppSelector } from "../helper/hooks";
+import { useAppDispatch, useAppSelector } from "../helper/hooks";
+import { getBoard } from "../store/actions/boardsActions";
 
 export interface ListPros {
   id: string;
@@ -11,14 +13,15 @@ export interface ListPros {
   cards: [];
   title: string;
 }
-
 const Board: React.FC = () => {
-  //   const { boardId } = useParams();
-  //   const dispatch = useAppDispatch();
+  const { boardId } = useParams();
+  const dispatch = useAppDispatch();
   const { colors } = useContext(ThemeContext);
   const board = useAppSelector((state) => state.currentBoard);
 
-  // console.log(board);
+  useEffect(() => {
+    if (boardId) dispatch(getBoard(boardId));
+  }, [dispatch, boardId]);
 
   return (
     <Container>

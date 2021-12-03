@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Header from "./components/Header";
@@ -15,6 +15,8 @@ import styled from "styled-components";
 import Board from "./pages/Board";
 import { useLocation } from "react-router-dom";
 import { resetAllBoards, resetBoard } from "./store/actions/boardsActions";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import AuthRoutes from "./components/AuthRoutes";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -41,7 +43,11 @@ function App() {
   }, [dispatch, alert, error, success]);
 
   useEffect(() => {
-    if (pathname === "/" || pathname.startsWith("/profile")) {
+    if (
+      pathname === "/" ||
+      pathname === "/login" ||
+      pathname.startsWith("/profile")
+    ) {
       dispatch(resetBoard);
     }
   }, [pathname, dispatch]);
@@ -60,23 +66,19 @@ function App() {
       </HeaderContainer>
 
       <BodyContainer>
-        {!user ? (
-          <Routes>
+        <Routes>
+          <Route element={<AuthRoutes />}>
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Routes>
-        ) : (
-          <Routes>
+          </Route>
+          <Route element={<ProtectedRoutes />}>
             <Route path="/" element={<AllBoards />} />
             <Route path="/:boardId" element={<Board />} />
             <Route path="/profile" element={<MyProfile />} />
             <Route path="/profile/edit" element={<EditProfile />} />
-            <Route path="/login" element={<Navigate to="/" />} />
-            <Route path="/signUp" element={<Navigate to="/" />} />
-            {/* <Route path="*" element={<p>NEED 404 PAGE</p>} /> */}
-          </Routes>
-        )}
+          </Route>
+          <Route path="*" element={<p>NOT FOUND!</p>} />
+        </Routes>
       </BodyContainer>
     </div>
   );
