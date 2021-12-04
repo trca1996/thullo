@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
 import { getAllBoards } from "../store/actions/boardsActions";
@@ -54,14 +54,32 @@ const Header = () => {
         </RightGroup>
       ) : (
         <Auth>
-          {/* TODO: Make this NavLink!!!*/}
-          <p onClick={() => navigate("/login")}>Login</p>
-          <p onClick={() => navigate("/signUp")}>Sign Up</p>
+          <StyledNavLink
+            to="/login"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Login
+          </StyledNavLink>
+          <StyledNavLink
+            to="/signUp"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Sign Up
+          </StyledNavLink>
         </Auth>
       )}
     </Container>
   );
 };
+
+const StyledNavLink = styled(NavLink)`
+  text-decoration: none;
+  color: ${({ theme }) => theme.colors.black};
+
+  &.active {
+    color: ${({ theme }) => theme.colors.blue1};
+  }
+`;
 
 const Container = styled.div`
   display: flex;
