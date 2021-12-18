@@ -1,3 +1,4 @@
+import { UserType } from "../../types/types";
 import {
   LOGIN_RESPONSE,
   LOGOUT_RESPONSE,
@@ -6,7 +7,7 @@ import {
   UPDATE_PROFILE_RESPONSE,
 } from "../constants/authConstants";
 
-export const authReducer = (state = null, action: any) => {
+export const authReducer = (state: UserType | null = null, action: any) => {
   switch (action.type) {
     case SIGNUP_RESPONSE:
     case LOGIN_RESPONSE:

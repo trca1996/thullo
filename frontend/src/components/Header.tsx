@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
 import { getAllBoards } from "../store/actions/boardsActions";
 import Button from "./Button";
+import Icon from "./Icon";
 import Input from "./Input";
 import User from "./User";
 
@@ -27,17 +28,16 @@ const Header = () => {
         style={{ cursor: "pointer" }}
       />
 
-      {board && (
+      {board?.id && (
         <BoardGroup>
           <div>
             <BoardName>{board.title}</BoardName>
           </div>
           <Line></Line>
-          <StyledButton
-            text="All board"
-            startIcon="apps"
-            onClick={() => navigate("/")}
-          />
+          <StyledButton onClick={() => navigate("/")}>
+            <span>All board</span>
+            <Icon name="apps" />
+          </StyledButton>
         </BoardGroup>
       )}
 
@@ -48,7 +48,11 @@ const Header = () => {
             placeholder="Keyword..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            Element={<SearchButton text="Search" onClick={handleSearch} />}
+            Element={
+              <SearchButton onClick={handleSearch}>
+                <span>Search</span>
+              </SearchButton>
+            }
           />
           <User name={user.name} photo={user.photo} />
         </RightGroup>
@@ -133,7 +137,8 @@ const SearchButton = styled(Button)`
   align-self: stretch;
   width: 7.4rem;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  justify-content: center;
 `;
 
 const Auth = styled.div`

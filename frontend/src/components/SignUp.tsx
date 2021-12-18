@@ -67,11 +67,9 @@ const SignUp = () => {
           onChange={handleChange}
         />
 
-        <Button
-          text="SignUp"
-          textStyle={{ fontWeight: "bold" }}
-          type="submit"
-        />
+        <Button style={{ justifyContent: "center" }} type="submit">
+          <span style={{ fontWeight: "bold" }}>SignUp</span>
+        </Button>
       </form>
 
       <Paragraph>

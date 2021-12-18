@@ -41,8 +41,6 @@ const User = ({ photo, name }: UserProps) => {
       {isExpanded && (
         <Expand>
           <Button
-            text="My Profile"
-            startIcon="account_circle"
             style={{
               background: pathname.startsWith("/profile")
                 ? colors.gray5
@@ -51,31 +49,36 @@ const User = ({ photo, name }: UserProps) => {
               fontSize: "1.4rem",
             }}
             onClick={() => navigate("/profile")}
-          />
+          >
+            <Icon name="account_circle" />
+            <span>My Profile</span>
+          </Button>
 
           <Button
-            text="My Boards"
-            startIcon="dashboard"
             style={{
               background: pathname === "/" ? colors.gray5 : "transparent",
               color: colors.gray1,
               fontSize: "1.4rem",
             }}
             onClick={() => navigate("/")}
-          />
+          >
+            <Icon name="dashboard" />
+            <span>My Boards</span>
+          </Button>
 
           <hr style={{ backgroundColor: colors.gray5 }} />
 
           <Button
-            text="Logout"
-            startIcon="logout"
             style={{
               background: "transparent",
               color: colors.red,
               fontSize: "1.4rem",
             }}
             onClick={() => dispatch(logout())}
-          />
+          >
+            <Icon name="logout" />
+            <span>Logout</span>
+          </Button>
         </Expand>
       )}
     </Container>

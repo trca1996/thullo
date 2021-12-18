@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { addBoard } from "../store/actions/boardsActions";
 import Button from "./Button";
+import Icon from "./Icon";
 import Input from "./Input";
 import Modal from "./Modal";
 
@@ -64,12 +65,13 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
           alt="cover"
         />
         <ExitButton
-          startIcon="close"
           onClick={() => {
             setCoverPreview("");
             setCover("");
           }}
-        />
+        >
+          <Icon name="close" />
+        </ExitButton>
       </ImageContainer>
 
       <StyledInput
@@ -81,12 +83,13 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
 
       <ButtonContainer>
         <StyledButton
-          text="Cover"
-          startIcon="image"
           textStyle={{ textAlign: "center" }}
           onClick={() => InputPhotoRef.current?.click()}
           isSet={cover ? true : false}
-        />
+        >
+          <Icon name="image" />
+          <span>Cover</span>
+        </StyledButton>
         <input
           ref={InputPhotoRef}
           type="file"
@@ -97,23 +100,28 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
         />
 
         <StyledButton
-          text="Private"
-          startIcon="lock"
           textStyle={{ textAlign: "start" }}
           onClick={() => setIsPrivate((curr) => !curr)}
           isPrivate={isPrivate}
-        />
+        >
+          <Icon name="lock" />
+          <span>Private</span>
+        </StyledButton>
       </ButtonContainer>
 
       <ActionContainer>
         <CancelButton
-          text="Cancel"
           onClick={() => {
             setInitValues();
             handleCloseModal();
           }}
-        />
-        <CreateButton text="Create" startIcon="add" onClick={handleAddBoard} />
+        >
+          <span>Cancel</span>
+        </CancelButton>
+        <CreateButton onClick={handleAddBoard}>
+          <Icon name="add" />
+          <span>Create</span>
+        </CreateButton>
       </ActionContainer>
     </Modal>
   );

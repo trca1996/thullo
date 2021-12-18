@@ -49,7 +49,9 @@ const UserForm = () => {
           onChange={handleChange}
         />
 
-        <Button text="Login" textStyle={{ fontWeight: "bold" }} type="submit" />
+        <Button style={{ justifyContent: "center" }} type="submit">
+          <span style={{ fontWeight: "bold" }}>Login</span>
+        </Button>
       </form>
 
       <Paragraph>

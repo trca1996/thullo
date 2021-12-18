@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import Label from "./Label";
 import Button from "./Button";
-import { CardProps } from "./List";
 import MemberImage from "./MemberImage";
 import Info from "./Info";
+import { Draggable } from "react-beautiful-dnd";
+import { CardType } from "../types/types";
+import Icon from "./Icon";
 
 // title, description, cover, list, members, attachments, comments, labels
 export interface labelProps {
@@ -12,48 +14,58 @@ export interface labelProps {
   color: string;
 }
 
-const Card: React.FC<{ data: CardProps }> = ({ data }) => {
+const Card: React.FC<{ data: CardType; index: number }> = ({ data, index }) => {
   return (
-    <Container>
-      {data.cover && <Image src={data.cover} alt={data.title} />}
+    <Draggable draggableId={data._id} index={index}>
+      {(provided) => (
+        <Container
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          {data.cover && <Image src={data.cover} alt={data.title} />}
 
-      <Title>{data.title}</Title>
+          <Title>{data.title}</Title>
 
-      <LabelContainer>
-        {data.labels &&
-          data.labels.map((label: labelProps) => (
-            <Label key={label._id} data={label} />
-          ))}
-      </LabelContainer>
+          <LabelContainer>
+            {data.labels &&
+              data.labels.map((label: labelProps) => (
+                <Label key={label._id} data={label} />
+              ))}
+          </LabelContainer>
 
-      {
-        <BottomContainer>
-          <MembersContainer>
-            {data.members &&
-              data.members.map(
-                (member: { _id: string; name: string; photo: string }) => (
-                  <MemberImage
-                    key={member._id}
-                    name={member.name}
-                    photo={member.photo}
-                  />
-                )
-              )}
-            <StyledButton startIcon="add" />
-          </MembersContainer>
+          {
+            <BottomContainer>
+              <MembersContainer>
+                {data.members &&
+                  data.members.map(
+                    (member: { _id: string; name: string; photo: string }) => (
+                      <MemberImage
+                        key={member._id}
+                        name={member.name}
+                        photo={member.photo}
+                      />
+                    )
+                  )}
+                <StyledButton>
+                  <Icon name="add" />
+                </StyledButton>
+              </MembersContainer>
 
-          <Section>
-            {data.comments && data.comments.length ? (
-              <Info icon="chat" info={data.comments.length} />
-            ) : null}
+              <Section>
+                {data.comments && data.comments.length ? (
+                  <Info icon="chat" info={data.comments.length} />
+                ) : null}
 
-            {data.attachments && data.attachments.length ? (
-              <Info icon="attach_file" info={data.attachments.length} />
-            ) : null}
-          </Section>
-        </BottomContainer>
-      }
-    </Container>
+                {data.attachments && data.attachments.length ? (
+                  <Info icon="attach_file" info={data.attachments.length} />
+                ) : null}
+              </Section>
+            </BottomContainer>
+          }
+        </Container>
+      )}
+    </Draggable>
   );
 };
 

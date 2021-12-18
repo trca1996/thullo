@@ -1,3 +1,4 @@
+import { AnyAction } from "redux";
 import {
   ERROR,
   ERROR_RESET,
@@ -7,7 +8,7 @@ import {
 
 export const statusMessageReducer = (
   state = { success: "", error: "" },
-  action: any
+  action: AnyAction
 ) => {
   switch (action.type) {
     case SUCCESS:

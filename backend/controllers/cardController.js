@@ -42,6 +42,8 @@ exports.addCard = catchAsync(async (req, res, next) => {
   }
 
   const newCard = await Card.create({ title, list: listId });
+  list.cards.push(newCard.id);
+  list.save({ validateBeforeSave: false });
 
   res.status(201).json({
     status: "success",
@@ -49,7 +51,25 @@ exports.addCard = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.removeCard = factory.deleteOne(Card);
+exports.removeCard = catchAsync(async (req, res, next) => {
+  const card = await Card.findByIdAndDelete(req.params.id);
+
+  if (!card) {
+    return next(new AppError("No document found with that ID", 404));
+  }
+
+  const list = await List.findById(card.list);
+  list.cards = list.cards.filter(
+    (cardId) => cardId.toString() !== req.params.id
+  );
+  await list.save({ validateBeforeSave: false });
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
+
 exports.updateCard = factory.updateOne(Card, ["title", "description", "cover"]); // Update only this three
 exports.getCard = factory.getOne(Card);
 
@@ -198,24 +218,58 @@ exports.editComment = catchAsync(async (req, res, next) => {
 
 exports.changeList = catchAsync(async (req, res, next) => {
   const cardId = req.params.id;
-  const { listId } = req.params;
+  const { newListId, prevListId, newIndex } = req.body;
 
-  const card = await Card.findByIdAndUpdate(
-    cardId,
-    { list: listId },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const card = await Card.findById(cardId);
 
   if (!card) {
     return next(new AppError("There is no card with that ID", 404));
   }
 
+  const prevList = await List.findById(prevListId);
+  const isCardExistInList = prevList.cards.some(
+    (card) => card.toString() === cardId
+  );
+
+  if (!isCardExistInList) {
+    return next(new AppError("This card is not in correct list", 400));
+  }
+
+  if (newListId === prevListId) {
+    const list = await List.findById(newListId);
+
+    list.cards = list.cards.filter(
+      (listCardId) => listCardId.toString() !== cardId
+    );
+
+    if (newIndex > list.cards.length) {
+      list.cards.push(cardId);
+    } else {
+      list.cards.splice(newIndex, 0, cardId);
+    }
+
+    await list.save({ validateBeforeSave: false });
+  } else {
+    const newList = await List.findById(newListId);
+
+    prevList.cards = prevList.cards.filter(
+      (listCardId) => listCardId.toString() !== cardId
+    );
+
+    if (newIndex > newList.cards.length) {
+      newList.cards.push(cardId);
+    } else {
+      newList.cards.splice(newIndex, 0, cardId);
+    }
+
+    await prevList.save({ validateBeforeSave: false });
+    await newList.save({ validateBeforeSave: false });
+    card.list = newListId;
+    await card.save({ validateBeforeSave: false });
+  }
+
   res.status(200).json({
     status: "success",
-    data: card,
   });
 });
 

@@ -24,7 +24,7 @@ router
   .patch(cardController.editComment)
   .delete(cardController.removeComment);
 
-router.patch("/:id/changeList/:listId", cardController.changeList);
+router.patch("/:id/changeList", cardController.changeList);
 
 router.post("/:id/label", cardController.addLabel);
 router.delete("/:id/label/:labelId", cardController.removeLabel);

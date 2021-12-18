@@ -9,6 +9,7 @@ import { store } from "./store";
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import { BrowserRouter } from "react-router-dom";
 import AlertTemplate from "./components/AlertTemplate";
+// import "@atlaskit/css-reset";
 
 const alertOptions = {
   position: positions.BOTTOM_CENTER,

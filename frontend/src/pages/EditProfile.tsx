@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { ThemeContext } from "styled-components";
 import Button from "../components/Button";
+import Icon from "../components/Icon";
 import Input from "../components/Input";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
 import { changePassword, updateProfile } from "../store/actions/authActions";
@@ -15,8 +16,8 @@ const EditProfile = () => {
     ""
   );
   const [photo, setPhoto] = useState("");
-  const [name, setName] = useState(() => user.name);
-  const [email, setEmail] = useState(() => user.email);
+  const [name, setName] = useState(() => (user ? user.name : ""));
+  const [email, setEmail] = useState(() => (user ? user.email : ""));
   const [handlePasswordState, setHandlePasswordState] = useState({
     password: "",
     passwordCurrent: "",
@@ -50,15 +51,16 @@ const EditProfile = () => {
   return (
     <Container>
       <Button
-        text="Back"
-        startIcon="arrow_back_ios_new"
         style={{
           backgroundColor: "transparent",
           color: colors.blue1,
           alignSelf: "flex-start",
         }}
         onClick={() => navigate("/profile")}
-      />
+      >
+        <Icon name="arrow_back_ios_new" />
+        <span>Back</span>
+      </Button>
       <EditContainer>
         <h6>Change Info</h6>
 
@@ -67,9 +69,9 @@ const EditProfile = () => {
             src={
               photoPreview
                 ? photoPreview.toString()
-                : `/img/users/${user.photo}`
+                : `/img/users/${user?.photo}`
             }
-            alt={`${user.name}`}
+            alt={`${user?.name}`}
           />
           <label htmlFor="photo">CHANGE PHOTO</label>
           <input
@@ -103,7 +105,9 @@ const EditProfile = () => {
           />
         </div>
 
-        <Button text="Change User Info" onClick={submitUserInfo} />
+        <Button style={{ justifyContent: "center" }} onClick={submitUserInfo}>
+          <span>Change User Info</span>
+        </Button>
 
         <hr />
 
@@ -153,7 +157,12 @@ const EditProfile = () => {
               }
             />
           </div>
-          <Button text="Change Password" onClick={handleChangePassword} />
+          <Button
+            style={{ justifyContent: "center" }}
+            onClick={handleChangePassword}
+          >
+            <span>Change Password</span>
+          </Button>
         </EditPassword>
       </EditContainer>
     </Container>

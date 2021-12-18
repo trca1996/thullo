@@ -4,26 +4,20 @@ import thunkMiddleware from "redux-thunk";
 import { combineReducers } from "redux";
 import { authReducer } from "./reducers/authReducers";
 import { statusMessageReducer } from "./reducers/statusMessageReducers";
-import { boardReducer, boardsReducer } from "./reducers/boardsReducers";
+import {
+  boardListState,
+  boardReducer,
+  boardsReducer,
+} from "./reducers/boardsReducers";
 import { loadingReducer } from "./reducers/loadingReducer";
-
-// INITIAL STATE
-const initState = {
-  user: null,
-  boards: [],
-  currentBoard: null,
-  status: {
-    success: "",
-    error: "",
-  },
-  loading: false,
-};
+import { BoardType, ListStateTypes, UserType } from "../types/types";
 
 // REDUCERS
 const reducers = combineReducers({
   user: authReducer,
   boards: boardsReducer,
   currentBoard: boardReducer,
+  boardListState: boardListState,
   status: statusMessageReducer,
   loading: loadingReducer,
 });
@@ -36,7 +30,8 @@ function configureStore() {
   const enhancers = [middlewareEnhancer];
   const composedEnhancers = composeWithDevTools(...enhancers);
 
-  const store = createStore(reducers, initState, composedEnhancers);
+  // @ts-ignore
+  const store = createStore(reducers, composedEnhancers);
 
   if (process.env.NODE_ENV !== "production" && module.hot) {
     module.hot.accept("./", () => store.replaceReducer(reducers));
@@ -48,5 +43,16 @@ function configureStore() {
 // EXPORT STORE
 export const store = configureStore();
 
-export type RootState = ReturnType<typeof store.getState>;
+// export type RootState = ReturnType<typeof store.getState>;
+export type RootState = {
+  user: UserType | null;
+  boards: BoardType[];
+  currentBoard: BoardType | null;
+  boardListState: ListStateTypes;
+  status: {
+    success: string;
+    error: string;
+  };
+  loading: boolean;
+};
 export type AppDispatch = typeof store.dispatch;

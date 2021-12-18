@@ -1,40 +1,36 @@
+import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { ListPros } from "../pages/Board";
+import { CardType } from "../types/types";
 import Button from "./Button";
 import Card from "./Card";
 import Icon from "./Icon";
 
-export interface CardProps {
-  _id: string;
-  title: string;
-  description: string;
-  cover: string;
-  list: [];
-  members: [];
-  attachments: [];
-  comments: [];
-  labels: [];
-}
-
-// TODO: Implement Drag and Drop on Cards. Use: React DnD or React Beautiful DnD
-
-const List: React.FC<{ data: ListPros }> = ({ data }) => {
+const List: React.FC<{
+  cards: CardType[];
+  list: { title: string; id: string; cardsIds: string[] };
+}> = ({ cards, list }) => {
   return (
     <Container>
       <Head>
-        <p>{data.title}</p>
+        <p>{list.title}</p>
         <Icon name="more_horiz" style={{ cursor: "pointer" }} />
       </Head>
 
-      {data.cards.map((card: CardProps) => (
-        <Card key={card._id} data={card} />
-      ))}
+      <Droppable droppableId={list.id}>
+        {(provided) => (
+          <CardContainer ref={provided.innerRef} {...provided.droppableProps}>
+            {cards.map((card, index) => (
+              <Card key={card._id} data={card} index={index} />
+            ))}
+            {provided.placeholder}
+          </CardContainer>
+        )}
+      </Droppable>
 
-      <StyledButton
-        text={data.cards.length ? "Add another card" : "Add card"}
-        endIcon="add"
-        textStyle={{ flex: "none" }}
-      />
+      <StyledButton>
+        <span>{cards.length ? "Add another card" : "Add card"}</span>
+        <Icon name="add" />
+      </StyledButton>
     </Container>
   );
 };
@@ -53,12 +49,19 @@ const Head = styled.div`
   font-size: 14px;
 `;
 
+const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
 const StyledButton = styled(Button)`
   width: 241px;
   height: 32px;
   background: ${({ theme }) => theme.colors.blue2};
   color: ${({ theme }) => theme.colors.blue1};
   border-radius: 8px;
+  justify-content: space-between;
 `;
 
 export default List;

@@ -12,6 +12,12 @@ const listSchema = new mongoose.Schema(
       ],
       minlength: [5, "A list title must have more or equal then 5 characters"],
     },
+    cards: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Card",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -19,12 +25,6 @@ const listSchema = new mongoose.Schema(
     versionKey: false,
   }
 );
-
-listSchema.virtual("cards", {
-  ref: "Card",
-  foreignField: "list",
-  localField: "_id",
-});
 
 const List = mongoose.model("List", listSchema);
 

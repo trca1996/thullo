@@ -3,6 +3,7 @@ import styled from "styled-components";
 import AddBoardModal from "../components/AddBoardModal";
 import BoardCard from "../components/BoardCard";
 import Button from "../components/Button";
+import Icon from "../components/Icon";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
 import { getAllBoards } from "../store/actions/boardsActions";
 
@@ -28,7 +29,10 @@ const AllBoards = () => {
       <Container>
         <Top>
           <h6>All Boards</h6>
-          <Button text="Add" startIcon="add" onClick={handleOpenModal} />
+          <Button onClick={handleOpenModal}>
+            <Icon name="add" />
+            <span>Add</span>
+          </Button>
         </Top>
         <BoardsContainer>
           {boards.map((board: any) => (

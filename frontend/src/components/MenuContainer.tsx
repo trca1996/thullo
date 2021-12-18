@@ -1,8 +1,21 @@
 import React from "react";
 import styled from "styled-components";
 
-const MenuContainer: React.FC = ({ children }) => {
-  return <Container>{children}</Container>;
+interface MenuContainerProps {
+  style?: object;
+  className?: string;
+}
+
+const MenuContainer: React.FC<MenuContainerProps> = ({
+  children,
+  style,
+  className,
+}) => {
+  return (
+    <Container className={className} style={{ ...style }}>
+      {children}
+    </Container>
+  );
 };
 
 const Container = styled.div`

@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import Icon from "./Icon";
-
 interface ButtonProps {
   text?: string;
   textStyle?: object;
@@ -14,18 +12,15 @@ interface ButtonProps {
   className?: string;
 }
 
-const Button = ({
-  text,
-  textStyle,
-  startIcon,
-  endIcon,
+const Button: React.FC<ButtonProps> = ({
   style,
   type,
   onClick,
   className,
   backgroundColor,
   color,
-}: ButtonProps) => {
+  children,
+}) => {
   return (
     <StyledButton
       style={{ backgroundColor, color, ...style }}
@@ -33,13 +28,7 @@ const Button = ({
       type={type}
       onClick={onClick}
     >
-      {startIcon && <Icon name={startIcon} />}
-      {text && (
-        <span style={{ flex: 1, textAlign: "center", ...textStyle }}>
-          {text}
-        </span>
-      )}
-      {endIcon && <Icon name={endIcon} />}
+      {children}
     </StyledButton>
   );
 };
@@ -53,7 +42,6 @@ const StyledButton = styled.button`
   padding: 1rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
   cursor: pointer;
 `;

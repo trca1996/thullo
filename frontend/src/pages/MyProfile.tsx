@@ -15,29 +15,30 @@ const MyProfile = () => {
         <Section>
           <h6>Profile</h6>
 
-          <EditButton text="Edit" onClick={() => navigate("edit")} />
+          <EditButton onClick={() => navigate("edit")}>
+            <span>Edit</span>
+          </EditButton>
         </Section>
 
         <hr />
 
         <MiniSection>
           <p>PHOTO</p>
-
-          <img src={`/img/users/${user.photo}`} alt="" />
+          {user && <img src={`/img/users/${user.photo}`} alt="" />}
         </MiniSection>
 
         <hr />
 
         <MiniSection>
           <p>NAME</p>
-          <p>{user.name}</p>
+          <p>{user?.name}</p>
         </MiniSection>
 
         <hr />
 
         <MiniSection>
           <p>EMAIL</p>
-          <p>{user.email}</p>
+          <p>{user?.email}</p>
         </MiniSection>
 
         <hr />

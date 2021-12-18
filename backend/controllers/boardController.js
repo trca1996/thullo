@@ -82,7 +82,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
   }).populate({
     path: "lists",
     select: "-__v -id",
-    populate: [{ path: "cards", model: "Card", select: "-__v" }],
+    populate: [{ path: "cards", model: "Card" }],
   });
 
   const doc = await query;

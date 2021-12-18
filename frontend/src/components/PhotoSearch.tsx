@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import getPhotos, { Photo } from "../helper/getPhotos";
 import Button from "./Button";
+import Icon from "./Icon";
 import Input from "./Input";
 import MenuContainer from "./MenuContainer";
 
@@ -34,7 +35,11 @@ const PhotoSearch = () => {
           placeholder="Keywords..."
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          Element={<Button startIcon="search" type="submit" />}
+          Element={
+            <Button type="submit">
+              <Icon name="search" />
+            </Button>
+          }
         />
       </form>
 
