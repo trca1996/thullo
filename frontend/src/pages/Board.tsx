@@ -5,7 +5,11 @@ import Button from "../components/Button";
 import List from "../components/List";
 import MemberImage from "../components/MemberImage";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
-import { changeCardPosition, getBoard } from "../store/actions/boardsActions";
+import {
+  changeBoardVisibility,
+  changeCardPosition,
+  getBoard,
+} from "../store/actions/boardsActions";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import MenuContainer from "../components/MenuContainer";
 import Icon from "../components/Icon";
@@ -15,6 +19,7 @@ const Board: React.FC = () => {
   const dispatch = useAppDispatch();
   const { colors } = useContext(ThemeContext);
   const board = useAppSelector((state) => state.currentBoard);
+  const user = useAppSelector((state) => state.user);
   const boardListsState = useAppSelector((state) => state.boardListState);
   const [privateOpen, setPrivateOpen] = useState(false);
 
@@ -62,16 +67,21 @@ const Board: React.FC = () => {
             <Icon name="lock" />
             <span>Private</span>
           </Button>
-          {privateOpen && (
+          {privateOpen && board?.admin === user?._id && (
             <MenuContainer style={{ minWidth: "max-content", gap: "1rem" }}>
               <Visibility>Visibility</Visibility>
               <PrivateParagraph>Choose who see to this board.</PrivateParagraph>
+
               <Button
                 style={{ flexDirection: "column" }}
                 backgroundColor={
-                  !board?.private ? colors.white3 : "transparent"
+                  !board?.isPrivate ? colors.white3 : "transparent"
                 }
                 color={colors.gray2}
+                onClick={() => {
+                  if (board?.id)
+                    dispatch(changeBoardVisibility(false, board.id));
+                }}
               >
                 <ButtonContent>
                   <Icon name="public" />
@@ -81,10 +91,17 @@ const Board: React.FC = () => {
                   Anyone on the internet can see this
                 </ButtonDescription>
               </Button>
+
               <Button
                 style={{ flexDirection: "column" }}
-                backgroundColor={board?.private ? colors.white3 : "transparent"}
+                backgroundColor={
+                  board?.isPrivate ? colors.white3 : "transparent"
+                }
                 color={colors.gray2}
+                onClick={() => {
+                  if (board?.id)
+                    dispatch(changeBoardVisibility(true, board.id));
+                }}
               >
                 <ButtonContent>
                   <Icon name="lock" />
@@ -106,7 +123,7 @@ const Board: React.FC = () => {
               photo={member.photo}
             />
           ))}
-          <Button style={{ fontWeight: "bold" }}>
+          <Button style={{ fontWeight: "bold" }} onClick={() => {}}>
             <Icon name="person_add_alt" />
           </Button>
         </Members>

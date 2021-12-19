@@ -27,7 +27,7 @@ export interface ListType {
 export interface BoardType {
   id: null | string;
   title: null | string;
-  private: null | boolean;
+  isPrivate: null | boolean;
   admin: null | string;
   lists: null | ListType[];
   members: null | UserType[];

@@ -49,7 +49,7 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
   const handleAddBoard = async () => {
     const formData = new FormData();
     formData.set("title", title);
-    formData.set("private", isPrivate.toString());
+    formData.set("isPrivate", isPrivate.toString());
     if (cover) formData.set("cover", cover);
 
     dispatch(addBoard(formData));

@@ -7,6 +7,7 @@ import {
 import {
   ADD_BOARD_RESPONSE,
   ALL_BOARDS_RESPONSE,
+  CHANGE_BOARD_VISIBILITY,
   CHANGE_CARD_POSITION_STATE,
   GET_BOARD,
   RESET_ALL_BOARDS,
@@ -30,7 +31,7 @@ const boardInitState: BoardType = {
   id: null,
   title: null,
   cover: null,
-  private: null,
+  isPrivate: null,
   admin: null,
   lists: null,
   members: null,
@@ -43,17 +44,19 @@ export const boardReducer = (state = boardInitState, action: any) => {
         id: action.payload.id,
         title: action.payload.title,
         cover: action.payload.cover,
-        private: action.payload.private,
+        isPrivate: action.payload.isPrivate,
         admin: action.payload.admin,
         lists: action.payload.lists,
         members: action.payload.members,
       };
+    case CHANGE_BOARD_VISIBILITY:
+      return { ...state, isPrivate: action.payload };
     case RESET_BOARD:
       return {
         id: null,
         title: null,
         cover: null,
-        private: null,
+        isPrivate: null,
         admin: null,
         lists: null,
         members: null,

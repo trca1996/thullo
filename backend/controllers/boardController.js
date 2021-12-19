@@ -54,7 +54,11 @@ exports.getAll = catchAsync(async (req, res, next) => {
   // EXECUTE QUERY
   const features = new APIFeatures(
     Board.find({
-      $or: [{ admin: userId }, { members: userId }, { private: { $ne: true } }],
+      $or: [
+        { admin: userId },
+        { members: userId },
+        { isPrivate: { $ne: true } },
+      ],
     }),
     req.query
   )
@@ -78,7 +82,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
 
   let query = Board.findOne({
     _id: req.params.id,
-    $or: [{ admin: userId }, { members: userId }, { private: { $ne: true } }],
+    $or: [{ admin: userId }, { members: userId }, { isPrivate: { $ne: true } }],
   }).populate({
     path: "lists",
     select: "-__v -id",

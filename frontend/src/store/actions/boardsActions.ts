@@ -4,6 +4,7 @@ import { DndObj } from "../../types/types";
 import {
   ADD_BOARD_RESPONSE,
   ALL_BOARDS_RESPONSE,
+  CHANGE_BOARD_VISIBILITY,
   CHANGE_CARD_POSITION_STATE,
   GET_BOARD,
   RESET_ALL_BOARDS,
@@ -56,6 +57,16 @@ export const changeCardPosition =
           newIndex: destination.index,
         }
       );
+    }, dispatch);
+
+export const changeBoardVisibility =
+  (isPrivate: boolean, boardId: string) => async (dispatch: any) =>
+    asyncActionFn(async () => {
+      const { data } = await axios.patch(`/api/v1/boards/${boardId}`, {
+        isPrivate: isPrivate.toString(),
+      });
+
+      dispatch({ type: CHANGE_BOARD_VISIBILITY, payload: data.data.isPrivate });
     }, dispatch);
 
 export const resetBoard = { type: RESET_BOARD };
