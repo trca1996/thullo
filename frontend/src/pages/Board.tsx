@@ -65,7 +65,7 @@ const Board: React.FC = () => {
             onClick={() => setPrivateOpen((curr) => !curr)}
           >
             <Icon name="lock" />
-            <span>Private</span>
+            <span>{board?.isPrivate ? "Private" : "Public"}</span>
           </Button>
           {privateOpen && board?.admin === user?._id && (
             <MenuContainer style={{ minWidth: "max-content", gap: "1rem" }}>
