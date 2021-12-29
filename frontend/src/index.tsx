@@ -9,7 +9,7 @@ import { store } from "./store";
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import { BrowserRouter } from "react-router-dom";
 import AlertTemplate from "./components/AlertTemplate";
-// import "@atlaskit/css-reset";
+import { SocketProvider } from "./context/SocketProvider";
 
 const alertOptions = {
   position: positions.BOTTOM_CENTER,
@@ -21,14 +21,16 @@ const alertOptions = {
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <AlertProvider template={AlertTemplate} {...alertOptions}>
-            <App />
-          </AlertProvider>
-        </ThemeProvider>
-      </Provider>
+      <SocketProvider>
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>
+            <GlobalStyle />
+            <AlertProvider template={AlertTemplate} {...alertOptions}>
+              <App />
+            </AlertProvider>
+          </ThemeProvider>
+        </Provider>
+      </SocketProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")

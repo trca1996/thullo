@@ -6,6 +6,12 @@ const boardController = require("./../controllers/boardController");
 
 const router = express.Router();
 
+router.patch(
+  "/:id/changeList",
+  authController.protect,
+  cardController.changeList
+);
+
 router.use(authController.protect, cardController.isMember);
 
 router.post("/", cardController.addCard);
@@ -23,8 +29,6 @@ router
   .route("/:id/comment/:commentId")
   .patch(cardController.editComment)
   .delete(cardController.removeComment);
-
-router.patch("/:id/changeList", cardController.changeList);
 
 router.post("/:id/label", cardController.addLabel);
 router.delete("/:id/label/:labelId", cardController.removeLabel);

@@ -13,8 +13,11 @@ import {
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import MenuContainer from "../components/MenuContainer";
 import Icon from "../components/Icon";
+import { useSocket } from "../context/SocketProvider";
+import { CHANGE_CARD_POSITION_STATE } from "../store/constants/boardsConstants";
 
 const Board: React.FC = () => {
+  const socket = useSocket();
   const { boardId } = useParams();
   const dispatch = useAppDispatch();
   const { colors } = useContext(ThemeContext);
@@ -22,6 +25,26 @@ const Board: React.FC = () => {
   const user = useAppSelector((state) => state.user);
   const boardListsState = useAppSelector((state) => state.boardListState);
   const [privateOpen, setPrivateOpen] = useState(false);
+
+  useEffect(() => {
+    socket.emit("join-board", boardId);
+
+    socket.on("change-position", (result) => {
+      dispatch({
+        type: CHANGE_CARD_POSITION_STATE,
+        payload: {
+          destination: result.destination,
+          source: result.source,
+          cardId: result.draggableId,
+        },
+      });
+    });
+
+    return () => {
+      socket.off("change-position");
+      socket.emit("leave-board", boardId);
+    };
+  });
 
   useEffect(() => {
     if (boardId) dispatch(getBoard(boardId));
@@ -53,6 +76,17 @@ const Board: React.FC = () => {
     dispatch(
       changeCardPosition(destination, source, draggableId, boardId as string)
     );
+
+    socket.emit(
+      "change-card-position",
+      {
+        destination,
+        source,
+        draggableId,
+        boardId,
+      },
+      boardId
+    );
   };
   return (
     <Container>
@@ -65,7 +99,7 @@ const Board: React.FC = () => {
             onClick={() => setPrivateOpen((curr) => !curr)}
           >
             <Icon name="lock" />
-            <span>Private</span>
+            <span>{board?.isPrivate ? "Private" : "Public"}</span>
           </Button>
           {privateOpen && board?.admin === user?._id && (
             <MenuContainer style={{ minWidth: "max-content", gap: "1rem" }}>
