@@ -5,10 +5,10 @@ class APIFeatures {
   }
 
   // Search
-  search() {
+  search(searchKey) {
     const keyword = this.queryString.keyword
       ? {
-          title: {
+          [`${searchKey}`]: {
             $regex: this.queryString.keyword,
             $options: "i",
           },

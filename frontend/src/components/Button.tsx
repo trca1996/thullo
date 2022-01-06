@@ -8,7 +8,7 @@ interface ButtonProps {
   color?: string;
   style?: object;
   type?: "button" | "submit" | "reset" | undefined;
-  onClick?: () => void;
+  onClick?: (e: any) => void;
   className?: string;
 }
 

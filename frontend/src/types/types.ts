@@ -29,8 +29,8 @@ export interface BoardType {
   title: null | string;
   isPrivate: null | boolean;
   admin: null | string;
-  lists: null | ListType[];
-  members: null | UserType[];
+  lists: ListType[];
+  members: UserType[];
   cover: string | null;
 }
 

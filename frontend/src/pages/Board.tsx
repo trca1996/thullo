@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import styled, { ThemeContext } from "styled-components";
 import Button from "../components/Button";
@@ -6,6 +6,7 @@ import List from "../components/List";
 import MemberImage from "../components/MemberImage";
 import { useAppDispatch, useAppSelector } from "../helper/hooks";
 import {
+  addMember,
   changeBoardVisibility,
   changeCardPosition,
   getBoard,
@@ -15,6 +16,7 @@ import MenuContainer from "../components/MenuContainer";
 import Icon from "../components/Icon";
 import { useSocket } from "../context/SocketProvider";
 import { CHANGE_CARD_POSITION_STATE } from "../store/constants/boardsConstants";
+import Input from "../components/Input";
 
 const Board: React.FC = () => {
   const socket = useSocket();
@@ -25,6 +27,9 @@ const Board: React.FC = () => {
   const user = useAppSelector((state) => state.user);
   const boardListsState = useAppSelector((state) => state.boardListState);
   const [privateOpen, setPrivateOpen] = useState(false);
+  const [addMemberOpen, setAddMemberOpen] = useState(false);
+  const userSearchRef = useRef<HTMLInputElement>(null);
+  const [addUserEmail, setAddUserEmail] = useState("");
 
   useEffect(() => {
     socket.emit("join-board", boardId);
@@ -51,12 +56,13 @@ const Board: React.FC = () => {
   }, [dispatch, boardId]);
 
   useEffect(() => {
-    const closePrivateModal = () => {
+    const closeMenuContainer = () => {
       if (privateOpen) setPrivateOpen(false);
+      if (addMemberOpen) setAddMemberOpen(false);
     };
-    window.addEventListener("click", closePrivateModal);
+    window.addEventListener("click", closeMenuContainer);
     return () => {
-      window.removeEventListener("click", closePrivateModal);
+      window.removeEventListener("click", closeMenuContainer);
     };
   });
 
@@ -88,6 +94,11 @@ const Board: React.FC = () => {
       boardId
     );
   };
+
+  useEffect(() => {
+    if (addMemberOpen) userSearchRef.current?.focus();
+  }, [addMemberOpen]);
+
   return (
     <Container>
       <HeadContainer>
@@ -103,8 +114,10 @@ const Board: React.FC = () => {
           </Button>
           {privateOpen && board?.admin === user?._id && (
             <MenuContainer style={{ minWidth: "max-content", gap: "1rem" }}>
-              <Visibility>Visibility</Visibility>
-              <PrivateParagraph>Choose who see to this board.</PrivateParagraph>
+              <MenuContainerTitle>Visibility</MenuContainerTitle>
+              <MenuContainerParagraph>
+                Choose who see to this board.
+              </MenuContainerParagraph>
 
               <Button
                 style={{ flexDirection: "column" }}
@@ -149,17 +162,52 @@ const Board: React.FC = () => {
           )}
         </div>
         <Members>
-          {board?.members?.map((member) => (
-            <MemberImage
-              style={{ width: "3.2rem", height: "3.2rem" }}
-              key={member._id}
-              name={member.name}
-              photo={member.photo}
-            />
-          ))}
-          <Button style={{ fontWeight: "bold" }} onClick={() => {}}>
+          {board.members.length > 0 &&
+            board.members.map((member) => (
+              <MemberImage
+                style={{ width: "3.2rem", height: "3.2rem" }}
+                key={member._id}
+                name={member.name}
+                photo={member.photo}
+              />
+            ))}
+          <Button
+            style={{ fontWeight: "bold" }}
+            onClick={() => setAddMemberOpen((curr) => !curr)}
+          >
             <Icon name="person_add_alt" />
           </Button>
+          {addMemberOpen && (
+            <MenuContainer
+              onClick={(e: any) => {
+                e.stopPropagation();
+              }}
+              style={{ minWidth: "max-content", gap: "1rem" }}
+            >
+              <MenuContainerTitle>Invite to Board</MenuContainerTitle>
+              <MenuContainerParagraph>
+                Search users you want to invite to
+              </MenuContainerParagraph>
+              <SearchUser
+                type="text"
+                placeholder="User email..."
+                inputRef={userSearchRef}
+                value={addUserEmail}
+                onChange={(e) => setAddUserEmail(e.target.value)}
+                Element={
+                  <Button
+                    onClick={() => {
+                      dispatch(addMember(addUserEmail, boardId as string));
+                      setAddMemberOpen(false);
+                      setAddUserEmail("");
+                    }}
+                  >
+                    <Icon name="add" />
+                  </Button>
+                }
+              />
+            </MenuContainer>
+          )}
         </Members>
         <Button
           backgroundColor={`${colors.white3}`}
@@ -206,13 +254,13 @@ const HeadContainer = styled.div`
   gap: 1.5rem;
 `;
 
-const Visibility = styled.p`
+const MenuContainerTitle = styled.p`
   font-weight: 600;
   font-size: 1.2rem;
   color: ${({ theme }) => theme.colors.gray2};
 `;
 
-const PrivateParagraph = styled.p`
+const MenuContainerParagraph = styled.p`
   font-weight: 400;
   font-size: 1.2rem;
 `;
@@ -221,6 +269,13 @@ const Members = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  position: relative;
+`;
+
+const SearchUser = styled(Input)`
+  padding: 2px 2px 2px 10px;
+  box-shadow: 1px 5px 15px 3px rgba(0, 0, 0, 0.05);
+  border: none;
 `;
 
 const MainContainer = styled.div`

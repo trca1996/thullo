@@ -3,6 +3,7 @@ import asyncActionFn from "../../helper/asyncActionFc";
 import { DndObj } from "../../types/types";
 import {
   ADD_BOARD_RESPONSE,
+  ADD_MEMBER,
   ALL_BOARDS_RESPONSE,
   CHANGE_BOARD_VISIBILITY,
   CHANGE_CARD_POSITION_STATE,
@@ -67,6 +68,20 @@ export const changeBoardVisibility =
       });
 
       dispatch({ type: CHANGE_BOARD_VISIBILITY, payload: data.data.isPrivate });
+      dispatch(
+        successMessage(`Board is now ${isPrivate ? "Private" : "Public"}`)
+      );
+    }, dispatch);
+
+export const addMember =
+  (email: string, boardId: string) => async (dispatch: any) =>
+    asyncActionFn(async () => {
+      const { data } = await axios.patch(`api/v1/boards/${boardId}/addMember`, {
+        memberEmail: email,
+      });
+
+      dispatch({ type: ADD_MEMBER, payload: data.data });
+      dispatch(successMessage("New member added"));
     }, dispatch);
 
 export const resetBoard = { type: RESET_BOARD };

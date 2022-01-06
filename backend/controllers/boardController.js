@@ -62,7 +62,7 @@ exports.getAll = catchAsync(async (req, res, next) => {
     }),
     req.query
   )
-    .search()
+    .search("title")
     .filter()
     .sort()
     .limitFields()
@@ -133,7 +133,7 @@ exports.addMember = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: memberEmail });
 
   if (!user) {
-    return next(new AppError("There is no user with that Id"));
+    return next(new AppError("There is no user with that email"));
   }
 
   if (user.id === board.admin.toString()) {
@@ -154,7 +154,7 @@ exports.addMember = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    data: board,
+    data: user,
   });
 });
 

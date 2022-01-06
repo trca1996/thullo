@@ -3,9 +3,11 @@ import {
   CardType,
   ListStateTypes,
   ListType,
+  UserType,
 } from "../../types/types";
 import {
   ADD_BOARD_RESPONSE,
+  ADD_MEMBER,
   ALL_BOARDS_RESPONSE,
   CHANGE_BOARD_VISIBILITY,
   CHANGE_CARD_POSITION_STATE,
@@ -33,24 +35,26 @@ const boardInitState: BoardType = {
   cover: null,
   isPrivate: null,
   admin: null,
-  lists: null,
-  members: null,
+  lists: [],
+  members: [],
 };
 
 export const boardReducer = (state = boardInitState, action: any) => {
   switch (action.type) {
     case GET_BOARD:
       return {
-        id: action.payload.id,
-        title: action.payload.title,
-        cover: action.payload.cover,
-        isPrivate: action.payload.isPrivate,
-        admin: action.payload.admin,
-        lists: action.payload.lists,
-        members: action.payload.members,
+        id: action.payload.id as string,
+        title: action.payload.title as string,
+        cover: action.payload.cover as string,
+        isPrivate: action.payload.isPrivate as boolean,
+        admin: action.payload.admin as string,
+        lists: action.payload.lists as ListType,
+        members: action.payload.members as UserType,
       };
     case CHANGE_BOARD_VISIBILITY:
       return { ...state, isPrivate: action.payload };
+    case ADD_MEMBER:
+      return { ...state, members: [...state.members, action.payload] };
     case RESET_BOARD:
       return {
         id: null,
@@ -58,8 +62,8 @@ export const boardReducer = (state = boardInitState, action: any) => {
         cover: null,
         isPrivate: null,
         admin: null,
-        lists: null,
-        members: null,
+        lists: [],
+        members: [],
       };
     default:
       return state;

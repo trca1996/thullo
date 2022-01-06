@@ -5,3 +5,4 @@ export const GET_BOARD = "get_board";
 export const RESET_BOARD = "reset_board";
 export const CHANGE_CARD_POSITION_STATE = "change_card_position_state";
 export const CHANGE_BOARD_VISIBILITY = "change_board_visibility";
+export const ADD_MEMBER = "add_member";

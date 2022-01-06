@@ -13,6 +13,7 @@ interface InputProps {
   style?: object;
   id?: string;
   className?: string;
+  inputRef?: React.LegacyRef<HTMLInputElement>;
 }
 
 const Input = ({
@@ -26,6 +27,7 @@ const Input = ({
   style,
   id,
   className,
+  inputRef,
 }: InputProps) => {
   return (
     <Container style={{ ...style }} className={className}>
@@ -37,6 +39,7 @@ const Input = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        ref={inputRef || null}
       />
       {Element && <>{Element}</>}
     </Container>

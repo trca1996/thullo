@@ -47,7 +47,7 @@ export const store = configureStore();
 export type RootState = {
   user: UserType | null;
   boards: BoardType[];
-  currentBoard: BoardType | null;
+  currentBoard: BoardType;
   boardListState: ListStateTypes;
   status: {
     success: string;

@@ -4,15 +4,17 @@ import styled from "styled-components";
 interface MenuContainerProps {
   style?: object;
   className?: string;
+  onClick?: (e: any) => void;
 }
 
 const MenuContainer: React.FC<MenuContainerProps> = ({
   children,
   style,
   className,
+  onClick,
 }) => {
   return (
-    <Container className={className} style={{ ...style }}>
+    <Container onClick={onClick} className={className} style={{ ...style }}>
       {children}
     </Container>
   );
