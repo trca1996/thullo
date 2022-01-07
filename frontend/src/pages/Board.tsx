@@ -17,6 +17,7 @@ import Icon from "../components/Icon";
 import { useSocket } from "../context/SocketProvider";
 import { CHANGE_CARD_POSITION_STATE } from "../store/constants/boardsConstants";
 import Input from "../components/Input";
+import BoardSideMenu from "../components/BoardSideMenu";
 
 const Board: React.FC = () => {
   const socket = useSocket();
@@ -30,6 +31,7 @@ const Board: React.FC = () => {
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const userSearchRef = useRef<HTMLInputElement>(null);
   const [addUserEmail, setAddUserEmail] = useState("");
+  const [showBoardMenu, setShowBoardMenu] = useState(false);
 
   useEffect(() => {
     socket.emit("join-board", boardId);
@@ -112,7 +114,7 @@ const Board: React.FC = () => {
             <Icon name="lock" />
             <span>{board?.isPrivate ? "Private" : "Public"}</span>
           </Button>
-          {privateOpen && board?.admin === user?._id && (
+          {privateOpen && board?.admin?._id === user?._id && (
             <MenuContainer style={{ minWidth: "max-content", gap: "1rem" }}>
               <MenuContainerTitle>Visibility</MenuContainerTitle>
               <MenuContainerParagraph>
@@ -213,6 +215,7 @@ const Board: React.FC = () => {
           backgroundColor={`${colors.white3}`}
           color={`${colors.gray3}`}
           style={{ fontWeight: "bold", marginLeft: "auto" }}
+          onClick={() => setShowBoardMenu(true)}
         >
           <Icon name="more_horiz" />
           <span>Show Menu</span>
@@ -235,6 +238,12 @@ const Board: React.FC = () => {
           <Icon name="add" />
         </StyledButton>
       </MainContainer>
+
+      <BoardSideMenu
+        showBoardMenu={showBoardMenu}
+        board={board}
+        setShowBoardMenu={setShowBoardMenu}
+      />
     </Container>
   );
 };
@@ -246,6 +255,7 @@ const Container = styled.div`
   gap: 1.5rem;
   width: 100%;
   height: 100%;
+  position: relative;
 `;
 
 const HeadContainer = styled.div`

@@ -1,5 +1,6 @@
 import { ReactChild } from "react";
 import styled, { keyframes } from "styled-components";
+import ReactDOM from "react-dom";
 
 interface ModalProps {
   children?: ReactChild | ReactChild[];
@@ -8,14 +9,15 @@ interface ModalProps {
 }
 
 const Modal = ({ children, open, handleClose }: ModalProps) => {
-  return (
+  return ReactDOM.createPortal(
     <>
       {open && (
         <Shadow onClick={handleClose}>
           <Container onClick={(e) => e.stopPropagation()}>{children}</Container>
         </Shadow>
       )}
-    </>
+    </>,
+    document.getElementById("modal") as Element
   );
 };
 

@@ -37,6 +37,8 @@ const boardInitState: BoardType = {
   admin: null,
   lists: [],
   members: [],
+  createdAt: null,
+  description: null,
 };
 
 export const boardReducer = (state = boardInitState, action: any) => {
@@ -50,6 +52,8 @@ export const boardReducer = (state = boardInitState, action: any) => {
         admin: action.payload.admin as string,
         lists: action.payload.lists as ListType,
         members: action.payload.members as UserType,
+        createdAt: action.payload.createdAt as string,
+        description: action.payload.description as string,
       };
     case CHANGE_BOARD_VISIBILITY:
       return { ...state, isPrivate: action.payload };
@@ -64,6 +68,8 @@ export const boardReducer = (state = boardInitState, action: any) => {
         admin: null,
         lists: [],
         members: [],
+        createdAd: null,
+        description: null,
       };
     default:
       return state;

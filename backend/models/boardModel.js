@@ -56,6 +56,11 @@ boardSchema.pre(/^find/, function (next) {
     select: "-__v -email",
   });
 
+  this.populate({
+    path: "admin",
+    select: "-__v",
+  });
+
   next();
 });
 

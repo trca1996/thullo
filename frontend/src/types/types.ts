@@ -28,10 +28,12 @@ export interface BoardType {
   id: null | string;
   title: null | string;
   isPrivate: null | boolean;
-  admin: null | string;
+  admin: null | UserType;
   lists: ListType[];
   members: UserType[];
   cover: string | null;
+  createdAt: null | string;
+  description: null | string;
 }
 
 export interface ListStateTypes {
