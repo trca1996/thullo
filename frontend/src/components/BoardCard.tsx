@@ -23,6 +23,8 @@ const BoardCard = ({ cover, title, members, id }: BoardCardProps) => {
   if (members.length > 2) {
     firstThreeMembers = members.slice(0, 3);
     numOfOthersMembers = members.slice(3).length;
+  } else {
+    firstThreeMembers = members;
   }
 
   return (
