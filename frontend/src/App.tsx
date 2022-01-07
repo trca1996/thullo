@@ -89,6 +89,7 @@ const HeaderContainer = styled.div`
   top: 0;
   width: 100%;
   background-color: ${({ theme }) => theme.colors.white1};
+  z-index: 1000;
 `;
 
 const BodyContainer = styled.div`

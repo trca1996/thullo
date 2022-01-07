@@ -92,6 +92,7 @@ const Container = styled.div`
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
   min-height: 6.8rem;
   padding: 0 2.4rem;
+  z-index: 1000;
 `;
 
 const BoardGroup = styled.div`
