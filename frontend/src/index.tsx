@@ -13,7 +13,7 @@ import { SocketProvider } from "./context/SocketProvider";
 
 const alertOptions = {
   position: positions.BOTTOM_CENTER,
-  timeout: 2000,
+  timeout: 4000,
   offset: "30px",
   transition: transitions.SCALE,
 };

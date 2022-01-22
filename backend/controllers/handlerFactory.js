@@ -39,9 +39,15 @@ exports.updateOne = (Model, filter = []) =>
       return next(new AppError("No document found with that ID", 404));
     }
 
+    let returnFields = {};
+
+    for (const key in newObj) {
+      returnFields[key] = doc[key];
+    }
+
     res.status(200).json({
       status: "success",
-      data: doc,
+      data: returnFields,
     });
   });
 

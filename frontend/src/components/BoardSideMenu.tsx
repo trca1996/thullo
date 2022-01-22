@@ -1,17 +1,49 @@
-import { useContext, useEffect } from "react";
+import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
+import { useContext, useEffect, useState } from "react";
 import styled, { ThemeContext } from "styled-components";
+import { useAppDispatch } from "../helper/hooks";
+import {
+  editBoardDescription,
+  removeBoard,
+  removeMember,
+} from "../store/actions/boardsActions";
 import { BoardType } from "../types/types";
+import AppEditor from "./AppEditor";
 import Button from "./Button";
 import Icon from "./Icon";
 import MemberCard from "./MemberCard";
 import SectionHeading from "./SectionHeading";
+import { stateToHTML } from "draft-js-export-html";
+import Modal from "./Modal";
+import { useNavigate } from "react-router-dom";
 
 const BoardSideMenu: React.FC<{
   showBoardMenu: boolean;
   board: BoardType;
   setShowBoardMenu: (arg: boolean) => void;
 }> = ({ showBoardMenu, board, setShowBoardMenu }) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { colors } = useContext(ThemeContext);
+  const [editDescription, setEditDescription] = useState(false);
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    key: string | "board" | null;
+  }>({ isOpen: false, key: null });
+
+  const [editorState, setEditorState] = useState<EditorState>(() => {
+    return EditorState.createEmpty();
+  });
+
+  useEffect(() => {
+    if (board.description) {
+      setEditorState(() => {
+        const contentState = JSON.parse(board.description as string);
+
+        return EditorState.createWithContent(convertFromRaw(contentState));
+      });
+    }
+  }, [board.description]);
 
   useEffect(() => {
     const closeSideBar = () => {
@@ -23,6 +55,36 @@ const BoardSideMenu: React.FC<{
       window.removeEventListener("click", closeSideBar);
     };
   }, [setShowBoardMenu, showBoardMenu]);
+
+  const cancelEditDescription = () => {
+    setEditDescription(false);
+    // setEditorState()
+  };
+
+  const saveEditDescription = (editorState: EditorState) => {
+    dispatch(
+      editBoardDescription(
+        JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+        board.id as string
+      )
+    );
+    setEditDescription(false);
+  };
+
+  const handleCloseModal = () => {
+    setModal({ isOpen: false, key: null });
+  };
+
+  const handleRemove = (key: string) => {
+    if (key === "board") {
+      dispatch(removeBoard(board.id as string));
+    } else {
+      dispatch(removeMember(key, board.id as string));
+    }
+
+    setModal({ isOpen: false, key: null });
+    navigate("/");
+  };
 
   return (
     <BoardMenu showMenu={showBoardMenu} onClick={(e) => e.stopPropagation()}>
@@ -62,12 +124,56 @@ const BoardSideMenu: React.FC<{
           title={"Description"}
           buttonTitle={board.description ? "Edit" : "Add"}
           ButtonIcon={<Icon name={board.description ? "edit" : "add"} />}
+          onClick={() => setEditDescription(true)}
+          hideButton={editDescription}
         />
+        {editDescription && (
+          <>
+            <AppEditor
+              editorState={editorState}
+              setEditorState={setEditorState}
+            />
 
-        {board.description && (
+            <div style={{ display: "flex", gap: "5px" }}>
+              <Button
+                backgroundColor={colors.green1}
+                color={colors.white}
+                style={{ padding: "5px 10px" }}
+                onClick={() => saveEditDescription(editorState)}
+              >
+                Save
+              </Button>
+              <Button
+                backgroundColor="transparent"
+                color={colors.gray3}
+                style={{ padding: "5px 10px" }}
+                onClick={cancelEditDescription}
+              >
+                Cancel
+              </Button>
+            </div>
+          </>
+        )}
+        {board.description && !editDescription && (
           <Description
             dangerouslySetInnerHTML={{
-              __html: board.description.replaceAll("\n", "</br>"),
+              __html: stateToHTML(
+                convertFromRaw(JSON.parse(board.description)),
+                {
+                  blockStyleFn: (block) => {
+                    if (
+                      block.get("type") === "unordered-list-item" ||
+                      "ordered-list-item"
+                    ) {
+                      return {
+                        style: {
+                          listStylePosition: "inside",
+                        },
+                      };
+                    }
+                  },
+                }
+              ),
             }}
           ></Description>
         )}
@@ -82,7 +188,7 @@ const BoardSideMenu: React.FC<{
             </Button>
           </MemberCard>
         )}
-        {board.members.map((member) => (
+        {board.members?.map((member) => (
           <MemberCard key={member._id} name={member.name} photo={member.photo}>
             <Button
               backgroundColor="transparent"
@@ -91,18 +197,57 @@ const BoardSideMenu: React.FC<{
                 border: `1px solid ${colors.red}`,
                 padding: "0.45rem 1.1rem",
               }}
+              onClick={() => setModal({ isOpen: true, key: member._id })}
             >
               Remove
             </Button>
           </MemberCard>
         ))}
       </MenuSection>
+
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "auto" }}
+      >
+        <Button
+          backgroundColor={colors.red}
+          onClick={() => setModal({ isOpen: true, key: "board" })}
+        >
+          Remove Board
+        </Button>
+      </div>
+
+      <Modal open={modal.isOpen} handleClose={handleCloseModal}>
+        <Question>{`Are you sure you want to remove this ${
+          modal.key === "board" ? modal.key : "user"
+        }?`}</Question>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            marginTop: "2rem",
+          }}
+        >
+          <Button
+            style={{ minWidth: "10rem", justifyContent: "center" }}
+            onClick={() => handleRemove(modal.key as string)}
+          >
+            Yes
+          </Button>
+          <Button
+            style={{ minWidth: "10rem", justifyContent: "center" }}
+            onClick={() => setModal({ isOpen: false, key: null })}
+          >
+            No
+          </Button>
+        </div>
+      </Modal>
     </BoardMenu>
   );
 };
 
 const BoardMenu = styled.div<{ showMenu: boolean }>`
-  height: 100%;
+  height: calc(100% - 7rem);
   width: 37.7rem;
   position: fixed;
   right: ${({ showMenu }) => (showMenu ? "0" : "-37.7rem")};
@@ -112,6 +257,14 @@ const BoardMenu = styled.div<{ showMenu: boolean }>`
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
   background: ${({ theme }) => theme.colors.white1};
   padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Heading = styled.div`
@@ -136,6 +289,11 @@ const MenuSection = styled.div`
 const Description = styled.div`
   font-size: 1.2rem;
   font-weight: normal;
+`;
+
+const Question = styled.p`
+  font-size: 1.8rem;
+  font-weight: bold;
 `;
 
 export default BoardSideMenu;

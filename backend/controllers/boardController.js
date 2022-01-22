@@ -20,7 +20,7 @@ exports.restrictToBoardAdmin = catchAsync(async (req, res, next) => {
 
   const board = await Board.findById(boardId);
 
-  if (userId !== board.admin.toString()) {
+  if (userId !== board.admin._id.toString()) {
     return next(new AppError("You are not authorized!"));
   }
 
@@ -168,7 +168,7 @@ exports.removeMember = catchAsync(async (req, res, next) => {
 
   res.status(204).json({
     status: "success",
-    data: board,
+    data: board.members,
   });
 });
 

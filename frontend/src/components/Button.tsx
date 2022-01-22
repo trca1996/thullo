@@ -1,9 +1,5 @@
 import styled from "styled-components";
 interface ButtonProps {
-  text?: string;
-  textStyle?: object;
-  startIcon?: string;
-  endIcon?: string;
   backgroundColor?: string;
   color?: string;
   style?: object;

@@ -7,7 +7,10 @@ import {
   ALL_BOARDS_RESPONSE,
   CHANGE_BOARD_VISIBILITY,
   CHANGE_CARD_POSITION_STATE,
+  EDIT_BOARD_DESCRIPTION,
   GET_BOARD,
+  REMOVE_BOARD,
+  REMOVE_MEMBER,
   RESET_ALL_BOARDS,
   RESET_BOARD,
 } from "../constants/boardsConstants";
@@ -83,6 +86,41 @@ export const addMember =
       dispatch({ type: ADD_MEMBER, payload: data.data });
       dispatch(successMessage("New member added"));
     }, dispatch);
+
+export const editBoardDescription =
+  (description: string, boardId: string) => async (dispatch: any) =>
+    asyncActionFn(async () => {
+      const { data } = await axios.patch(`api/v1/boards/${boardId}`, {
+        description,
+      });
+
+      dispatch({
+        type: EDIT_BOARD_DESCRIPTION,
+        payload: data.data.description,
+      });
+    }, dispatch);
+
+export const removeMember =
+  (memberId: string, boardId: string) => async (dispatch: any) =>
+    asyncActionFn(async () => {
+      const { data } = await axios.patch(
+        `api/v1/boards/${boardId}/removeMember`,
+        { memberId }
+      );
+
+      dispatch({
+        type: REMOVE_MEMBER,
+        payload: data.data,
+      });
+    }, dispatch);
+
+export const removeBoard = (boardId: string) => async (dispatch: any) =>
+  asyncActionFn(async () => {
+    await axios.delete(`api/v1/boards/${boardId}`);
+
+    dispatch({ type: REMOVE_BOARD });
+    dispatch(successMessage("You remove board successfully"));
+  }, dispatch);
 
 export const resetBoard = { type: RESET_BOARD };
 export const resetAllBoards = { type: RESET_ALL_BOARDS };

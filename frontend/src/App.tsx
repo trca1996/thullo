@@ -17,6 +17,7 @@ import { useLocation } from "react-router-dom";
 import { resetAllBoards, resetBoard } from "./store/actions/boardsActions";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import AuthRoutes from "./components/AuthRoutes";
+import "draft-js/dist/Draft.css";
 
 function App() {
   const dispatch = useAppDispatch();

@@ -233,7 +233,7 @@ const Board: React.FC = () => {
           })}
         </DragDropContext>
 
-        <StyledButton textStyle={{ flex: "none" }}>
+        <StyledButton>
           <span>{board?.lists?.length ? "Add another list" : "Add list"}</span>
           <Icon name="add" />
         </StyledButton>

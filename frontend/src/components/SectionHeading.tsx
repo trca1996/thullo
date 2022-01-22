@@ -7,16 +7,19 @@ const SectionHeading: React.FC<{
   title: string;
   buttonTitle?: string;
   ButtonIcon?: ReactNode;
-}> = ({ buttonTitle, ButtonIcon, Icon, title }) => {
+  onClick?: () => void;
+  hideButton?: boolean;
+}> = ({ buttonTitle, ButtonIcon, Icon, title, hideButton, onClick }) => {
   const { colors } = useContext(ThemeContext);
   return (
     <Container>
       {Icon}
       <p>{title}</p>
-      {buttonTitle && (
+      {buttonTitle && !hideButton && (
         <Button
           backgroundColor="transparent"
           color={colors.gray4}
+          onClick={onClick}
           style={{
             border: `1px solid ${colors.gray4}`,
             padding: "0.4rem 1.2rem",
