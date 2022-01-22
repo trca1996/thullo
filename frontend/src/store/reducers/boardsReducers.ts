@@ -11,7 +11,10 @@ import {
   ALL_BOARDS_RESPONSE,
   CHANGE_BOARD_VISIBILITY,
   CHANGE_CARD_POSITION_STATE,
+  EDIT_BOARD_DESCRIPTION,
   GET_BOARD,
+  REMOVE_BOARD,
+  REMOVE_MEMBER,
   RESET_ALL_BOARDS,
   RESET_BOARD,
 } from "../constants/boardsConstants";
@@ -59,7 +62,12 @@ export const boardReducer = (state = boardInitState, action: any) => {
       return { ...state, isPrivate: action.payload };
     case ADD_MEMBER:
       return { ...state, members: [...state.members, action.payload] };
+    case EDIT_BOARD_DESCRIPTION:
+      return { ...state, description: action.payload };
+    case REMOVE_MEMBER:
+      return { ...state, members: action.payload || [] };
     case RESET_BOARD:
+    case REMOVE_BOARD:
       return {
         id: null,
         title: null,
@@ -148,6 +156,9 @@ export const boardListState = (state = listStateInit, action: any) => {
           },
         };
       }
+    case RESET_BOARD:
+    case REMOVE_BOARD:
+      return listStateInit;
     default:
       return state;
   }

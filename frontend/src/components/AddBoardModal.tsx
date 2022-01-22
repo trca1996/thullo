@@ -83,7 +83,6 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
 
       <ButtonContainer>
         <StyledButton
-          textStyle={{ textAlign: "center" }}
           onClick={() => InputPhotoRef.current?.click()}
           isSet={cover ? true : false}
         >
@@ -100,7 +99,6 @@ const AddBoardModal: React.FC<AddBoardModalProps> = ({
         />
 
         <StyledButton
-          textStyle={{ textAlign: "start" }}
           onClick={() => setIsPrivate((curr) => !curr)}
           isPrivate={isPrivate}
         >

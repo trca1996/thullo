@@ -18,7 +18,6 @@ const boardSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      trim: true,
     },
     isPrivate: {
       type: Boolean,

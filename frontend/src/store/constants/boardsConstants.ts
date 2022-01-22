@@ -6,3 +6,6 @@ export const RESET_BOARD = "reset_board";
 export const CHANGE_CARD_POSITION_STATE = "change_card_position_state";
 export const CHANGE_BOARD_VISIBILITY = "change_board_visibility";
 export const ADD_MEMBER = "add_member";
+export const EDIT_BOARD_DESCRIPTION = "edit_board_description";
+export const REMOVE_MEMBER = "remove_member";
+export const REMOVE_BOARD = "remove_board";
