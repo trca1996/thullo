@@ -13,8 +13,10 @@ import {
   CHANGE_BOARD_VISIBILITY,
   CHANGE_CARD_POSITION_STATE,
   EDIT_BOARD_DESCRIPTION,
+  EDIT_LIST,
   GET_BOARD,
   REMOVE_BOARD,
+  REMOVE_LIST,
   REMOVE_MEMBER,
   RESET_ALL_BOARDS,
   RESET_BOARD,
@@ -70,6 +72,20 @@ export const boardReducer = (state = boardInitState, action: any) => {
     case ADD_LIST:
       const newList = action.payload;
       return { ...state, lists: [...state.lists, newList] };
+    case EDIT_LIST:
+      const editedList = action.payload;
+      const indexOfList = state.lists.findIndex(
+        (list) => list.id === editedList.id
+      );
+      const newListArr = [...state.lists];
+      newListArr[indexOfList] = editedList;
+      return { ...state, lists: newListArr };
+    case REMOVE_LIST:
+      const listId = action.payload;
+      return {
+        ...state,
+        lists: state.lists.filter((list) => list.id !== listId),
+      };
     case RESET_BOARD:
     case REMOVE_BOARD:
       return {
@@ -169,10 +185,32 @@ export const boardListState = (state = listStateInit, action: any) => {
           [newList.id]: {
             id: newList.id,
             title: newList.title,
-            cardsIds: [],
+            cardsIds: newList.cards,
           },
         },
         listOrder: [...state.listOrder, newList.id],
+      };
+    case EDIT_LIST:
+      const editedList = action.payload;
+      return {
+        ...state,
+        lists: {
+          ...state.lists,
+          [editedList.id]: {
+            id: editedList.id,
+            title: editedList.title,
+            cardsIds: editedList.cards,
+          },
+        },
+      };
+    case REMOVE_LIST:
+      const removedListId = action.payload;
+      const newListObj = Object.assign(state.lists);
+      delete newListObj[removedListId];
+      return {
+        ...state,
+        lists: newListObj,
+        listOrder: state.listOrder.filter((listId) => listId !== removedListId),
       };
     case RESET_BOARD:
     case REMOVE_BOARD:

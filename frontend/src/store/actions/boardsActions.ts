@@ -9,8 +9,10 @@ import {
   CHANGE_BOARD_VISIBILITY,
   CHANGE_CARD_POSITION_STATE,
   EDIT_BOARD_DESCRIPTION,
+  EDIT_LIST,
   GET_BOARD,
   REMOVE_BOARD,
+  REMOVE_LIST,
   REMOVE_MEMBER,
   RESET_ALL_BOARDS,
   RESET_BOARD,
@@ -133,6 +135,26 @@ export const addList =
         }
       );
       dispatch({ type: ADD_LIST, payload: data.data });
+    }, dispatch);
+
+export const editList =
+  (listTitle: string, listId: string, boardId: string) =>
+  async (dispatch: any) =>
+    asyncActionFn(async () => {
+      const { data } = await axios.patch(`/api/v1/boards/${boardId}/editList`, {
+        newListTitle: listTitle,
+        listId,
+      });
+      dispatch({ type: EDIT_LIST, payload: data.data });
+    }, dispatch);
+
+export const removeList =
+  (listId: string, boardId: string) => async (dispatch: any) =>
+    asyncActionFn(async () => {
+      await axios.patch(`/api/v1/boards/${boardId}/removeList`, {
+        listId,
+      });
+      dispatch({ type: REMOVE_LIST, payload: listId });
     }, dispatch);
 
 export const resetBoard = { type: RESET_BOARD };

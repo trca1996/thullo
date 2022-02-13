@@ -164,7 +164,7 @@ exports.removeMember = catchAsync(async (req, res, next) => {
 
   board.members = board.members.filter((member) => member.id !== memberId);
 
-  board.save({ validateBeforeSave: false });
+  await board.save({ validateBeforeSave: false });
 
   res.status(204).json({
     status: "success",
@@ -193,20 +193,48 @@ exports.createList = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.editList = catchAsync(async (req, res, next) => {
+  const { listId, newListTitle } = req.body;
+
+  const list = await List.findByIdAndUpdate(
+    listId,
+    { title: newListTitle },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!list) {
+    return next(new AppError(`There is no list with that id`, 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: list,
+  });
+});
+
 exports.removeList = catchAsync(async (req, res, next) => {
   const { listId } = req.body;
 
+  const list = await List.findById(listId);
+
+  if (!list) {
+    return next(AppError(`There is no list with that id`, 404));
+  }
+
   const cards = await Card.find({ list: listId });
 
-  if (cards) {
+  if (cards.length > 0) {
     return next(new AppError(`Can't remove list while there is cards in it`));
   }
 
   const board = await Board.findById(req.params.id);
 
-  board.lists = board.members.filter((list) => list.id !== listId);
+  board.lists = board.lists.filter((list) => list.toString() !== listId);
 
-  board.save({ validateBeforeSave: false });
+  await board.save({ validateBeforeSave: false });
 
   res.status(204).json({
     status: "success",

@@ -26,10 +26,11 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.white1};
   border-radius: 0.8rem;
   border: 1px solid ${({ theme }) => theme.colors.gray5};
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   padding: 1rem;
   position: absolute;
   top: 4rem;
+  z-index: 500;
 `;
 
 export default MenuContainer;

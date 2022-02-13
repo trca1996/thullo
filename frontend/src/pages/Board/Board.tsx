@@ -270,6 +270,10 @@ const Board: React.FC = () => {
             type="text"
             value={listTitle}
             onChange={(e) => setListTitle(e.target.value)}
+            submitFn={() => {
+              handleAddList(listTitle, boardId as string);
+              handleCloseListModal();
+            }}
           />
           <ListButton
             onClick={() => {

@@ -42,4 +42,10 @@ router.patch(
   boardController.removeList
 );
 
+router.patch(
+  "/:id/editList",
+  boardController.restrictToBoardAdmin,
+  boardController.editList
+);
+
 module.exports = router;

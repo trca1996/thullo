@@ -6,10 +6,6 @@ const listSchema = new mongoose.Schema(
       type: String,
       required: [true, "A list must have a title"],
       trim: true,
-      maxlength: [
-        40,
-        "A list title must have less or equal then 40 characters",
-      ],
       minlength: [5, "A list title must have more or equal then 5 characters"],
     },
     cards: [

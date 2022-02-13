@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, KeyboardEventHandler } from "react";
 import styled from "styled-components";
 import Icon from "./Icon";
 
@@ -14,6 +14,8 @@ interface InputProps {
   id?: string;
   className?: string;
   inputRef?: React.LegacyRef<HTMLInputElement>;
+  submitFn?: (props?: any) => void;
+  disabled?: boolean;
 }
 
 const Input = ({
@@ -28,9 +30,22 @@ const Input = ({
   id,
   className,
   inputRef,
+  submitFn = undefined,
+  disabled,
 }: InputProps) => {
+  const handleSubmit: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (submitFn && e.key === "Enter") {
+      submitFn();
+    }
+  };
+
   return (
-    <Container style={{ ...style }} className={className}>
+    <Container
+      style={{ ...style }}
+      className={className}
+      onKeyPress={handleSubmit}
+      disabled={Boolean(disabled)}
+    >
       {icon && <Icon name={icon} />}
       <input
         id={id}
@@ -40,16 +55,18 @@ const Input = ({
         value={value}
         onChange={onChange}
         ref={inputRef || null}
+        disabled={disabled}
       />
       {Element && <>{Element}</>}
     </Container>
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ disabled: boolean }>`
   padding: 1rem;
   border-radius: 1rem;
-  border: 1px solid ${({ theme }) => theme.colors.gray4};
+  border: 1px solid
+    ${({ theme, disabled }) => (disabled ? "transparent" : theme.colors.gray4)};
   color: ${({ theme }) => theme.colors.gray3};
   display: flex;
   align-items: center;
@@ -57,10 +74,14 @@ const Container = styled.div`
   font-size: 1.8rem;
 
   input {
+    font-size: inherit;
+    font-weight: inherit;
     background: transparent;
     flex: 1;
     outline: none;
     border: none;
+    text-overflow: ellipsis;
+
     &::placeholder {
       color: ${({ theme }) => theme.colors.gray4};
     }
