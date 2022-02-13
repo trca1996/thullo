@@ -3,6 +3,7 @@ import asyncActionFn from "../../helper/asyncActionFc";
 import { DndObj } from "../../types/types";
 import {
   ADD_BOARD_RESPONSE,
+  ADD_LIST,
   ADD_MEMBER,
   ALL_BOARDS_RESPONSE,
   CHANGE_BOARD_VISIBILITY,
@@ -121,6 +122,18 @@ export const removeBoard = (boardId: string) => async (dispatch: any) =>
     dispatch({ type: REMOVE_BOARD });
     dispatch(successMessage("You remove board successfully"));
   }, dispatch);
+
+export const addList =
+  (listTitle: string, boardId: string) => async (dispatch: any) =>
+    asyncActionFn(async () => {
+      const { data } = await axios.post(
+        `/api/v1/boards/${boardId}/createList`,
+        {
+          title: listTitle,
+        }
+      );
+      dispatch({ type: ADD_LIST, payload: data.data });
+    }, dispatch);
 
 export const resetBoard = { type: RESET_BOARD };
 export const resetAllBoards = { type: RESET_ALL_BOARDS };

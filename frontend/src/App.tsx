@@ -6,18 +6,18 @@ import Header from "./components/Header";
 import { checkUser } from "./store/actions/authActions";
 import { useAppDispatch, useAppSelector } from "./helper/hooks";
 import { useAlert } from "react-alert";
-import MyProfile from "./pages/MyProfile";
-import EditProfile from "./pages/EditProfile";
 import { errorReset, successReset } from "./store/actions/statusMessageActions";
-import AllBoards from "./pages/AllBoards";
 import Loading from "./components/Loading";
 import styled from "styled-components";
-import Board from "./pages/Board";
 import { useLocation } from "react-router-dom";
 import { resetAllBoards, resetBoard } from "./store/actions/boardsActions";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import AuthRoutes from "./components/AuthRoutes";
 import "draft-js/dist/Draft.css";
+import AllBoards from "./pages/AllBoards";
+import Board from "./pages/Board";
+import EditProfile from "./pages/EditProfile";
+import MyProfile from "./pages/MyProfile";
 
 function App() {
   const dispatch = useAppDispatch();

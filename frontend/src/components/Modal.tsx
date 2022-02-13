@@ -6,14 +6,17 @@ interface ModalProps {
   children?: ReactChild | ReactChild[];
   open: boolean;
   handleClose: () => void;
+  className?: string;
 }
 
-const Modal = ({ children, open, handleClose }: ModalProps) => {
+const Modal = ({ children, open, handleClose, className }: ModalProps) => {
   return ReactDOM.createPortal(
     <>
       {open && (
         <Shadow onClick={handleClose}>
-          <Container onClick={(e) => e.stopPropagation()}>{children}</Container>
+          <Container className={className} onClick={(e) => e.stopPropagation()}>
+            {children}
+          </Container>
         </Shadow>
       )}
     </>,

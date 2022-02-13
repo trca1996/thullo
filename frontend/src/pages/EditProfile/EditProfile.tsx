@@ -1,11 +1,17 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { ThemeContext } from "styled-components";
-import Button from "../components/Button";
-import Icon from "../components/Icon";
-import Input from "../components/Input";
-import { useAppDispatch, useAppSelector } from "../helper/hooks";
-import { changePassword, updateProfile } from "../store/actions/authActions";
+import { ThemeContext } from "styled-components";
+import Button from "../../components/Button";
+import Icon from "../../components/Icon";
+import Input from "../../components/Input";
+import { useAppDispatch, useAppSelector } from "../../helper/hooks";
+import { changePassword, updateProfile } from "../../store/actions/authActions";
+import {
+  Container,
+  EditContainer,
+  EditPassword,
+  PhotoEdit,
+} from "./editProfile.style";
 
 const EditProfile = () => {
   const dispatch = useAppDispatch();
@@ -168,53 +174,5 @@ const EditProfile = () => {
     </Container>
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 2rem;
-`;
-
-const EditContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  border: 1px solid ${({ theme }) => theme.colors.gray4};
-  border-radius: 1rem;
-  width: 50rem;
-  padding: 1rem 2rem;
-
-  h6 {
-    font-size: 1.5rem;
-  }
-`;
-
-const PhotoEdit = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  img {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 0.8rem;
-  }
-
-  input {
-    display: none;
-  }
-
-  label {
-    cursor: pointer;
-  }
-`;
-
-const EditPassword = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
 
 export default EditProfile;

@@ -9,3 +9,6 @@ export const ADD_MEMBER = "add_member";
 export const EDIT_BOARD_DESCRIPTION = "edit_board_description";
 export const REMOVE_MEMBER = "remove_member";
 export const REMOVE_BOARD = "remove_board";
+export const ADD_LIST = "add_list";
+export const REMOVE_LIST = "remove_list";
+export const EDIT_LIST = "edit_list";

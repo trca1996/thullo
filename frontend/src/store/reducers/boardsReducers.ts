@@ -7,6 +7,7 @@ import {
 } from "../../types/types";
 import {
   ADD_BOARD_RESPONSE,
+  ADD_LIST,
   ADD_MEMBER,
   ALL_BOARDS_RESPONSE,
   CHANGE_BOARD_VISIBILITY,
@@ -66,6 +67,9 @@ export const boardReducer = (state = boardInitState, action: any) => {
       return { ...state, description: action.payload };
     case REMOVE_MEMBER:
       return { ...state, members: action.payload || [] };
+    case ADD_LIST:
+      const newList = action.payload;
+      return { ...state, lists: [...state.lists, newList] };
     case RESET_BOARD:
     case REMOVE_BOARD:
       return {
@@ -156,6 +160,20 @@ export const boardListState = (state = listStateInit, action: any) => {
           },
         };
       }
+    case ADD_LIST:
+      const newList = action.payload;
+      return {
+        ...state,
+        lists: {
+          ...state.lists,
+          [newList.id]: {
+            id: newList.id,
+            title: newList.title,
+            cardsIds: [],
+          },
+        },
+        listOrder: [...state.listOrder, newList.id],
+      };
     case RESET_BOARD:
     case REMOVE_BOARD:
       return listStateInit;

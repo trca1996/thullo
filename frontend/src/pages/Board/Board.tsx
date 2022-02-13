@@ -1,23 +1,39 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
-import styled, { ThemeContext } from "styled-components";
-import Button from "../components/Button";
-import List from "../components/List";
-import MemberImage from "../components/MemberImage";
-import { useAppDispatch, useAppSelector } from "../helper/hooks";
+import { ThemeContext } from "styled-components";
+import Button from "../../components/Button";
+import List from "../../components/List";
+import MemberImage from "../../components/MemberImage";
+import { useAppDispatch, useAppSelector } from "../../helper/hooks";
 import {
+  addList,
   addMember,
   changeBoardVisibility,
   changeCardPosition,
   getBoard,
-} from "../store/actions/boardsActions";
+} from "../../store/actions/boardsActions";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import MenuContainer from "../components/MenuContainer";
-import Icon from "../components/Icon";
-import { useSocket } from "../context/SocketProvider";
-import { CHANGE_CARD_POSITION_STATE } from "../store/constants/boardsConstants";
-import Input from "../components/Input";
-import BoardSideMenu from "../components/BoardSideMenu";
+import MenuContainer from "../../components/MenuContainer";
+import Icon from "../../components/Icon";
+import { useSocket } from "../../context/SocketProvider";
+import { CHANGE_CARD_POSITION_STATE } from "../../store/constants/boardsConstants";
+import BoardSideMenu from "../../components/BoardSideMenu";
+import {
+  ButtonContent,
+  ButtonDescription,
+  Container,
+  HeadContainer,
+  ListButton,
+  ListModal,
+  ListTitle,
+  ListTitleInput,
+  MainContainer,
+  Members,
+  MenuContainerParagraph,
+  MenuContainerTitle,
+  SearchUser,
+  StyledButton,
+} from "./board.style";
 
 const Board: React.FC = () => {
   const socket = useSocket();
@@ -32,6 +48,8 @@ const Board: React.FC = () => {
   const userSearchRef = useRef<HTMLInputElement>(null);
   const [addUserEmail, setAddUserEmail] = useState("");
   const [showBoardMenu, setShowBoardMenu] = useState(false);
+  const [listTitle, setListTitle] = useState("");
+  const [isListModalOpen, setIsListModalOpen] = useState(false);
 
   useEffect(() => {
     socket.emit("join-board", boardId);
@@ -100,6 +118,15 @@ const Board: React.FC = () => {
   useEffect(() => {
     if (addMemberOpen) userSearchRef.current?.focus();
   }, [addMemberOpen]);
+
+  const handleCloseListModal = () => {
+    setIsListModalOpen(false);
+    setListTitle("");
+  };
+
+  const handleAddList = (listTitle: string, boardId: string) => {
+    dispatch(addList(listTitle, boardId));
+  };
 
   return (
     <Container>
@@ -233,10 +260,27 @@ const Board: React.FC = () => {
           })}
         </DragDropContext>
 
-        <StyledButton>
+        <StyledButton onClick={() => setIsListModalOpen(true)}>
           <span>{board?.lists?.length ? "Add another list" : "Add list"}</span>
           <Icon name="add" />
         </StyledButton>
+
+        <ListModal open={isListModalOpen} handleClose={handleCloseListModal}>
+          <ListTitle>Add title for new list</ListTitle>
+          <ListTitleInput
+            type="text"
+            value={listTitle}
+            onChange={(e) => setListTitle(e.target.value)}
+          />
+          <ListButton
+            onClick={() => {
+              handleAddList(listTitle, boardId as string);
+              handleCloseListModal();
+            }}
+          >
+            Add list
+          </ListButton>
+        </ListModal>
       </MainContainer>
 
       <BoardSideMenu
@@ -247,74 +291,5 @@ const Board: React.FC = () => {
     </Container>
   );
 };
-
-const Container = styled.div`
-  padding: 3.5rem 2.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-  height: 100%;
-  position: relative;
-`;
-
-const HeadContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-`;
-
-const MenuContainerTitle = styled.p`
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: ${({ theme }) => theme.colors.gray2};
-`;
-
-const MenuContainerParagraph = styled.p`
-  font-weight: 400;
-  font-size: 1.2rem;
-`;
-
-const Members = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: relative;
-`;
-
-const SearchUser = styled(Input)`
-  padding: 2px 2px 2px 10px;
-  box-shadow: 1px 5px 15px 3px rgba(0, 0, 0, 0.05);
-  border: none;
-`;
-
-const MainContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.white3};
-  border-radius: 2.4rem;
-  padding: 2.8rem 2.4rem;
-  display: flex;
-  gap: 2rem;
-`;
-
-const StyledButton = styled(Button)`
-  width: 241px;
-  height: 32px;
-  background: ${({ theme }) => theme.colors.blue2};
-  color: ${({ theme }) => theme.colors.blue1};
-  border-radius: 8px;
-`;
-
-const ButtonContent = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  align-self: flex-start;
-`;
-
-const ButtonDescription = styled.p`
-  font-size: 1rem;
-  font-weight: 400;
-  color: ${({ theme }) => theme.colors.gray3};
-`;
 
 export default Board;
