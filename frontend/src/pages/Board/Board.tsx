@@ -4,7 +4,11 @@ import { ThemeContext } from "styled-components";
 import Button from "../../components/Button";
 import List from "../../components/List";
 import MemberImage from "../../components/MemberImage";
-import { useAppDispatch, useAppSelector } from "../../helper/hooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+  useAutoClose,
+} from "../../helper/hooks";
 import {
   addList,
   addMember,
@@ -75,16 +79,11 @@ const Board: React.FC = () => {
     if (boardId) dispatch(getBoard(boardId));
   }, [dispatch, boardId]);
 
-  useEffect(() => {
-    const closeMenuContainer = () => {
-      if (privateOpen) setPrivateOpen(false);
-      if (addMemberOpen) setAddMemberOpen(false);
-    };
-    window.addEventListener("click", closeMenuContainer);
-    return () => {
-      window.removeEventListener("click", closeMenuContainer);
-    };
-  });
+  const closeMenuContainer = () => {
+    if (privateOpen) setPrivateOpen(false);
+    if (addMemberOpen) setAddMemberOpen(false);
+  };
+  useAutoClose(closeMenuContainer);
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;

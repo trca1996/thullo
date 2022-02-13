@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import styled, { ThemeContext } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAppDispatch } from "../helper/hooks";
+import { useAppDispatch, useAutoClose } from "../helper/hooks";
 import { logout } from "../store/actions/authActions";
 import Button from "./Button";
 import Icon from "./Icon";
@@ -19,16 +19,10 @@ const User = ({ photo, name }: UserProps) => {
   const { colors } = useContext(ThemeContext);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  useEffect(() => {
-    const closeExtend = () => {
-      if (isExpanded) setIsExpanded(false);
-    };
-
-    window.addEventListener("click", closeExtend);
-    return () => {
-      window.removeEventListener("click", closeExtend);
-    };
-  });
+  const closeExtend = () => {
+    if (isExpanded) setIsExpanded(false);
+  };
+  useAutoClose(closeExtend);
 
   return (
     <Container onClick={() => setIsExpanded((curr) => !curr)}>

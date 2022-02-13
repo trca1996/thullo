@@ -1,7 +1,7 @@
 import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
 import { useContext, useEffect, useState } from "react";
 import styled, { ThemeContext } from "styled-components";
-import { useAppDispatch } from "../helper/hooks";
+import { useAppDispatch, useAutoClose } from "../helper/hooks";
 import {
   editBoardDescription,
   removeBoard,
@@ -45,16 +45,10 @@ const BoardSideMenu: React.FC<{
     }
   }, [board.description]);
 
-  useEffect(() => {
-    const closeSideBar = () => {
-      if (showBoardMenu) setShowBoardMenu(false);
-    };
-    window.addEventListener("click", closeSideBar);
-
-    return () => {
-      window.removeEventListener("click", closeSideBar);
-    };
-  }, [setShowBoardMenu, showBoardMenu]);
+  const closeSideBar = () => {
+    if (showBoardMenu) setShowBoardMenu(false);
+  };
+  useAutoClose(closeSideBar);
 
   const cancelEditDescription = () => {
     setEditDescription(false);
